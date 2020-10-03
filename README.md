@@ -6,4 +6,4 @@ This is an attempt at recreating the basic version of the game Candy Crush by th
 
 Requirement
 -------
-The game is written in Java 14 with JavaFX 14.
+The game is written in Java 15 with JavaFX 15.
