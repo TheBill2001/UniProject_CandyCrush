@@ -1,10 +1,15 @@
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.stage.*;
 
-public class Main {
-    public static void main(String[] args) {
-        // Create a logger
-        Logger logger = Logger.getLogger(Main.class.getName());
-        logger.log(Level.INFO, "Hello, world!");
-    }
-}
+public class Main extends Application {  
+    @Override     
+    public void start(Stage primaryStage) throws Exception { 
+       /* 
+       Code for JavaFX application. 
+       (Stage, scene, scene graph) 
+       */       
+    }         
+    public static void main(String args[]){           
+       launch(args);      
+    } 
+ } 
