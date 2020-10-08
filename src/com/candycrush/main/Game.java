@@ -4,8 +4,9 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.Toolkit;
 
-public class Game extends Canvas implements Runnable{
+public class Game extends Canvas implements Runnable {
     private static final long serialVersionUID = 8102020L;
 
     public static final int WIDTH = 1280;
@@ -43,10 +44,10 @@ public class Game extends Canvas implements Runnable{
 
         while (running) {
             long now = System.nanoTime();
-            delta += (now - lastTime) / ns; 
+            delta += (now - lastTime) / ns;
             lastTime = now;
             // 1 delta means 1 tick has passed
-            while(delta >= 1) {
+            while (delta >= 1) {
                 tick();
                 delta--;
             }
@@ -57,7 +58,7 @@ public class Game extends Canvas implements Runnable{
 
             if (System.currentTimeMillis() - timer > 1000) { // 1000 miliseconds = 1 second
                 timer += 1000;
-                //System.out.println("FPS: " + frames);
+                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -72,7 +73,7 @@ public class Game extends Canvas implements Runnable{
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
-            this.createBufferStrategy(1);
+            this.createBufferStrategy(3);
             return;
         }
 
@@ -86,6 +87,7 @@ public class Game extends Canvas implements Runnable{
     }
 
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "true");
         new Game();
     }
 
