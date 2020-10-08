@@ -6,10 +6,10 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-public class Windows extends Canvas {
+public class Window extends Canvas {
     private static final long serialVersionUID = 8102020L;   
     
-    public Windows(int width, int height, String title, Game game) {
+    public Window(int width, int height, String title, Game game) {
         JFrame frame = new JFrame(title);
 
         frame.setPreferredSize(new Dimension(width, height));

@@ -7,3 +7,8 @@ This is an attempt at recreating the basic version of the game Candy Crush by th
 Requirement
 -------
 The game is written in Java 14.
+
+To do
+-------
+Implement GameObject
+Improve performance from buffering
