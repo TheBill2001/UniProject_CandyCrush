@@ -4,19 +4,24 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.Toolkit;
 
 public class Game extends Canvas implements Runnable {
     private static final long serialVersionUID = 8102020L;
 
     public static final int WIDTH = 1280;
-    public static final int HEIGHT = WIDTH / 12 * 9;
+    public static final int HEIGHT = WIDTH * 9 / 12;
 
     private Thread thread;
     private boolean running = false;
 
+    private Handler handler;
+
     public Game() {
+        handler = new Handler();
+
         new Window(WIDTH, HEIGHT, "Candy Crush!", this);
+
+        handler.addObject(new Grid(350, 30, ID.grid));
     }
 
     public synchronized void start() {
@@ -36,7 +41,7 @@ public class Game extends Canvas implements Runnable {
 
     public void run() {
         long lastTime = System.nanoTime();
-        double amountOfTicks = 25; // ticks per second
+        double amountOfTicks = 60; // ticks per second
         double ns = 1000000000 / amountOfTicks; // nanoseconds per tick
         double delta = 0;
         long timer = System.currentTimeMillis();
@@ -67,7 +72,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-
+        handler.tick();
     }
 
     private void render() {
@@ -79,15 +84,16 @@ public class Game extends Canvas implements Runnable {
 
         Graphics g = bs.getDrawGraphics();
 
-        g.setColor(Color.blue);
+        g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        handler.render(g);
 
         g.dispose();
         bs.show();
     }
 
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "true");
         new Game();
     }
 
