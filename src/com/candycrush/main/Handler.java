@@ -1,6 +1,6 @@
 package com.candycrush.main;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.LinkedList;
 
 public class Handler {
@@ -12,7 +12,7 @@ public class Handler {
         }
     }
 
-    public void render(Graphics g) {
+    public void render(Graphics2D g) {
         for (GameObject tempObject : objects) {
             tempObject.render(g);
         }

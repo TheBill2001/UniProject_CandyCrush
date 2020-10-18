@@ -1,8 +1,6 @@
 package com.candycrush.main;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -82,7 +80,9 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
-        Graphics g = bs.getDrawGraphics();
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+        g.setRenderingHints(rh);
 
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
@@ -94,6 +94,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "true");
         new Game();
     }
 

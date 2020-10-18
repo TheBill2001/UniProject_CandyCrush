@@ -12,21 +12,15 @@ public class Grid extends GameObject {
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(x-1, y-1, 902, 902);
-
-        g.setColor(Color.WHITE);
-        int tempX = x;
-        int tempY = y;
-        int line = 2;
-        int tile = 100;
         for(int i=0; i<9; i++) {
             for(int j=0; j<9; j++) {
-                g.fillRect(tempX + line, tempY + line, tile - 2 * line, tile - 2 * line);
-                tempX += tile;
+                if ((i+j) % 2 == 0) {
+                    g.setColor(Color.BLUE);
+                } else {
+                    g.setColor(Color.CYAN);
+                }
+                g.fillRoundRect(350+i*100,30+j*100,100,100,30,30);
             }
-            tempX = x;
-            tempY += tile;
         }
     }
 }
