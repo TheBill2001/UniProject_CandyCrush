@@ -19,7 +19,7 @@ public class Game extends Canvas implements Runnable {
 
         new Window(WIDTH, HEIGHT, "Candy Crush!", this);
 
-        handler.addObject(new Grid(350, 30, ID.grid));
+        handler.addObject(new Grid(350, 30, ID.grid, 0));
     }
 
     public synchronized void start() {

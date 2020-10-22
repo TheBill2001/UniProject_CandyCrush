@@ -9,16 +9,24 @@ public class Grid extends GameObject {
     private final List<BufferedImage> texture = new ArrayList<>();
     private static final int SPRITE_ROWS = 3;
     private static final int SPRITE_COLUMNS = 3;
-    private static final int ROW_OFFSET = 325;
-    private static final int COLUMN_OFFSET = 5;
+    private final int ROW_OFFSET;
+    private final int COLUMN_OFFSET;
+    private final int LEVEL_NUM;
+    private LevelReader levelReader = new LevelReader();
+    private boolean[][] grid;
 
-    public Grid(int x, int y, ID id) {
+    public Grid(int x, int y, ID id, int level) {
         super(x, y, id);
+        this.ROW_OFFSET = x;
+        this.COLUMN_OFFSET = y;
+        this.LEVEL_NUM = level;
 
         BufferedImageLoader loader = new BufferedImageLoader();
         BufferedImage sprite = loader.loadImage("/texture/grid.png");
         SpriteSheet ss = new SpriteSheet(sprite);
         divideSprite(ss);
+
+        grid = levelReader.getLevelGrid(LEVEL_NUM);
     }
 
     private void divideSprite(SpriteSheet ss) {
@@ -34,6 +42,16 @@ public class Grid extends GameObject {
     }
 
     public void render(Graphics g) {
-        g.drawImage(texture.get(0),ROW_OFFSET,COLUMN_OFFSET, null);
+        for (int i = 0 ; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                boolean even = i % 2 == j % 2;
+                if (grid[i][j]) {
+
+                } else {
+
+                }
+            }
+        }
+
     }
 }
