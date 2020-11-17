@@ -115,7 +115,7 @@ public class Grid extends GameObject {
                     // Draw conner
                     for (int k = 0; k < 4; k++) {
 
-                        if (emptyAdjacent(i, j, k) && emptyAdjacent(i, j, k + 1))
+                        if (emptyAdjacent(i, j, k) && emptyAdjacent(i, j, k + 1) && emptyDiagonal(i,j,k))
                             g.drawImage(texture.get(2 * k + even), imgPosX + diagonalOffsetX(k) * 50, imgPosY + diagonalOffsetY(k) * 50, null);
                         else if (!emptyAdjacent(i, j, k) && emptyAdjacent(i, j, k + 1) && emptyDiagonal(i,j,k))
                             g.drawImage(texture.get(16 + 2 * k + even), imgPosX + diagonalOffsetX(k) * 50, imgPosY + diagonalOffsetY(k) * 50, null);
