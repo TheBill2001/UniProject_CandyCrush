@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class LevelReader {
-    private static final String path = "/level";
+    private static final String path = "res/level";
     private final List<boolean[][]> LEVEL_GRID = new ArrayList<>();
 
     public LevelReader() {
@@ -24,14 +24,13 @@ public class LevelReader {
                         String line = scanner.nextLine();
 
                         if (line.contains("empty")) {
+                            line = line.replace("empty", "");
                             line = line.replace("=","");
                             readGrid(line);
                         }
                     }
                 }
             }
-
-
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -39,15 +38,21 @@ public class LevelReader {
     }
 
     private void readGrid(String line) {
-        String[] cells = line.split(" ");
+        String[] cells = line.split("\\s");
         boolean[][] grid = new boolean[9][9];
         for (boolean[] row : grid) {
             Arrays.fill(row, true);
         }
 
         for (String str : cells) {
-            int cellNum = Integer.parseInt(str);
-            grid[(cellNum / 9) - 1][(cellNum % 9) - 1] = false;
+            if (!str.equals("")) {
+                int cellNum = Integer.parseInt(str);
+                if ((cellNum % 9) == 0) {
+                    grid[8][(cellNum / 9) - 1] = false;
+                } else {
+                    grid[(cellNum % 9) - 1][(cellNum / 9)] = false;
+                }
+            }
         }
 
         LEVEL_GRID.add(grid);
