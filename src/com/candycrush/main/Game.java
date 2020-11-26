@@ -12,14 +12,14 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
 
-    private Handler handler;
+    private final Handler handler;
 
     public Game() {
         handler = new Handler();
 
         new Window(WIDTH, HEIGHT, "Candy Crush!", this);
 
-        handler.addObject(new Grid(350, 30, ID.grid, 0));
+        handler.addObject(new Grid(350, 30, 0));
     }
 
     public synchronized void start() {

@@ -2,41 +2,31 @@ package com.candycrush.main;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Grid extends GameObject {
     private static final int SPRITE_ROWS = 8;
     private static final int SPRITE_COLUMNS = 8;
     private static final LevelReader levelReader = new LevelReader();
-    private final List<BufferedImage> texture = new ArrayList<>();
+    private final List<BufferedImage> texture;
     private final int ROW_OFFSET;
     private final int COLUMN_OFFSET;
     private final boolean[][] grid;
 
-    public Grid(int x, int y, ID id, int level) {
-        super(x, y, id);
+    public Grid(int x, int y, int level) {
+        super(x, y);
         this.ROW_OFFSET = x + 30;
         this.COLUMN_OFFSET = y + 30;
 
         BufferedImageLoader loader = new BufferedImageLoader();
         BufferedImage sprite = loader.loadImage("res/texture/grid.png");
-        SpriteSheet ss = new SpriteSheet(sprite);
-        divideSprite(ss);
-
+        SpriteSheet ss = new SpriteSheet(sprite, SPRITE_ROWS, SPRITE_COLUMNS, 50, 50);
+        texture = ss.divideSprite();
         grid = levelReader.getLevelGrid(level);
     }
 
-    private void divideSprite(SpriteSheet ss) {
-        for (int i = 1; i <= SPRITE_ROWS; i++) {
-            for (int j = 1; j <= SPRITE_COLUMNS; j++) {
-                texture.add(ss.getImage(i, j, 50, 50));
-            }
-        }
-    }
-
     public void tick() {
-
+        // Nothing
     }
 
     private int offsetDirX(int dir) {
