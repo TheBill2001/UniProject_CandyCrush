@@ -13,6 +13,11 @@ public abstract class GameObject {
         this.id = id;
     }
 
+    public GameObject(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public abstract void tick();
     public abstract void render(Graphics g);
 
