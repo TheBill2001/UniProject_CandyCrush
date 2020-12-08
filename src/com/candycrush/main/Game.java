@@ -1,5 +1,8 @@
 package com.candycrush.main;
 
+import com.candycrush.main.handler.Handler;
+import com.candycrush.main.uicomponent.MainMenu;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -9,12 +12,17 @@ public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH * 9 / 12;
 
-    private Thread thread;
-    private boolean running = false;
-
+    private static Thread thread;
+    private static boolean running = false;
+    private static State state = State.MAIN_MENU;
+    private static Handler handler;
 
     public Game() {
+        handler = new Handler();
+        new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
 
+        MainMenu mainMenu = new MainMenu();
+        handler.addComponent(mainMenu);
     }
 
     public synchronized void start() {
@@ -65,7 +73,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-
+        handler.tick();
     }
 
     private void render() {
@@ -81,10 +89,18 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        //render
+        handler.render(g);
 
         g.dispose();
         bs.show();
+    }
+
+    public void setState(State state) {
+        Game.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public static void main(String[] args) {

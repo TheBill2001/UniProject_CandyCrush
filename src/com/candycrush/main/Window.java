@@ -1,9 +1,7 @@
 package com.candycrush.main;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
-
 import javax.swing.*;
+import java.awt.*;
 
 public class Window extends Canvas {
     private static final long serialVersionUID = 8102020L;   
