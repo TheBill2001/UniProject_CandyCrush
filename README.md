@@ -8,7 +8,3 @@ Requirement
 -------
 The game is written in Java 14.
 
-To do
--------
-Implement GameObject
-Improve performance from buffering
