@@ -12,14 +12,9 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
 
-    private final Handler handler;
 
     public Game() {
-        handler = new Handler();
 
-        new Window(WIDTH, HEIGHT, "Candy Crush!", this);
-
-        handler.addObject(new Grid(350, 30, 0));
     }
 
     public synchronized void start() {
@@ -70,7 +65,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-        handler.tick();
+
     }
 
     private void render() {
@@ -83,11 +78,10 @@ public class Game extends Canvas implements Runnable {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Graphics2D g = (Graphics2D) bs.getDrawGraphics();
         g.setRenderingHints(rh);
-
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        handler.render(g);
+        //render
 
         g.dispose();
         bs.show();
