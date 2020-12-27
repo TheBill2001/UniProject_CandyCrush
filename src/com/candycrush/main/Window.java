@@ -1,11 +1,15 @@
 package com.candycrush.main;
 
+import com.candycrush.main.handler.MouseHandler;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 
 public class Window extends Canvas {
-    private static final long serialVersionUID = 8102020L;   
-    
+    @Serial
+    private static final long serialVersionUID = 8102020L;
+
     public Window(int width, int height, String title, Game game) {
         JFrame frame = new JFrame(title);
 

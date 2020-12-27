@@ -1,28 +1,45 @@
 package com.candycrush.main;
 
-import com.candycrush.main.handler.Handler;
-import com.candycrush.main.uicomponent.MainMenu;
+import com.candycrush.main.handler.MouseHandler;
+import com.candycrush.main.handler.ObjectHandler;
+import com.candycrush.main.resourceloader.TextureLoader;
+import com.candycrush.main.scene.MainMenu;
+import com.candycrush.main.uicomponent.Button;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
+import java.io.Serial;
 
 public class Game extends Canvas implements Runnable {
-    private static final long serialVersionUID = 8102020L;
-
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH * 9 / 12;
-
+    @Serial
+    private static final long serialVersionUID = 8102020L;
     private static Thread thread;
     private static boolean running = false;
     private static State state = State.MAIN_MENU;
-    private static Handler handler;
+    private static final ObjectHandler OBJECT_HANDLER = ObjectHandler.getInstance();
+    private static final TextureLoader TEXTURE_LOADER = TextureLoader.getInstance();
+    private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
 
     public Game() {
-        handler = new Handler();
         new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
+        this.addMouseListener(MOUSE_HANDLER);
+        //this.addMouseMotionListener(MOUSE_HANDLER);
+
+        Button button = new Button();
 
         MainMenu mainMenu = new MainMenu();
-        handler.addComponent(mainMenu);
+        OBJECT_HANDLER.addObject(mainMenu);
+        OBJECT_HANDLER.addObject(button);
+        MOUSE_HANDLER.addObject(button);
+    }
+
+    public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "true");
+        new Game();
     }
 
     public synchronized void start() {
@@ -64,7 +81,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) { // 1000 milliseconds = 1 second
                 timer += 1000;
-                System.out.println("FPS: " + frames);
+//                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -73,7 +90,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-        handler.tick();
+        OBJECT_HANDLER.tick();
     }
 
     private void render() {
@@ -89,23 +106,18 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        handler.render(g);
+        OBJECT_HANDLER.render(g);
 
         g.dispose();
         bs.show();
-    }
-
-    public void setState(State state) {
-        Game.state = state;
     }
 
     public State getState() {
         return state;
     }
 
-    public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "true");
-        new Game();
+    public void setState(State state) {
+        Game.state = state;
     }
 
 }

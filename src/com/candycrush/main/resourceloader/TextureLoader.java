@@ -6,13 +6,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ResourceLoader {
+public class TextureLoader {
     private static final HashMap<String, BufferedImage> texture = new HashMap<>();
+    private static TextureLoader textureLoader = null;
 
-    public ResourceLoader() {
+    private TextureLoader() {
         System.out.println("Resource loader started!");
         loadTexture();
         System.out.println("Resource loader ended!");
+    }
+
+    public static TextureLoader getInstance() {
+        if (textureLoader == null) {
+            textureLoader = new TextureLoader();
+        }
+        return textureLoader;
     }
 
     public BufferedImage getTexture(String name) {
@@ -20,7 +28,7 @@ public class ResourceLoader {
     }
 
     private void loadTexture() {
-        String path = "/res/texture";
+        String path = "res/texture";
         BufferedImage image = null;
         String name;
         File[] fileList;
