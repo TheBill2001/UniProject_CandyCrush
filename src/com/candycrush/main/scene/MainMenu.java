@@ -6,7 +6,7 @@ import com.candycrush.main.handler.GameObject;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 
-public class MainMenu implements GameObject {
+public class MainMenu extends GameObject {
     private static final int WIDTH = Game.WIDTH;
     private static final int HEIGHT = Game.HEIGHT;
     private static final float HUE_MIN = 0;
@@ -17,30 +17,12 @@ public class MainMenu implements GameObject {
     private Color color2 = Color.black;
 
     public MainMenu() {
+        super(0,0,0,0);
         System.out.println("Main Menu started!");
 
     }
 
     @Override
-    public int getX() {
-        return 0;
-    }
-
-    @Override
-    public int getY() {
-        return 0;
-    }
-
-    @Override
-    public int getWidth() {
-        return WIDTH;
-    }
-
-    @Override
-    public int getHeight() {
-        return HEIGHT;
-    }
-
     public void tick() {
         // Color changing gradient
         hue += colorDelta / 20;
@@ -51,6 +33,7 @@ public class MainMenu implements GameObject {
         color2 = Color.getHSBColor(hue + 16 * colorDelta, 1, 1);
     }
 
+    @Override
     public void render(Graphics2D graphic) {
         // Draw backdrop gradient
         float[] dist = {0f, 1f};

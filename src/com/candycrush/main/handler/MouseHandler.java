@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class MouseHandler extends MouseAdapter {
     private static MouseHandler handler = null;
-    private static ArrayList<Clickable> objects = new ArrayList<>();
+    private static final ArrayList<Clickable> objects = new ArrayList<>();
 
     public static MouseHandler getInstance() {
         if (handler == null) {
@@ -32,13 +32,35 @@ public class MouseHandler extends MouseAdapter {
         int mouseX = e.getX();
         int mouseY = e.getY();
 
-        System.out.println("Pressed!");
-        System.out.println(mouseX);
-        System.out.println(mouseY);
+        for (Clickable object : objects) {
+            if (mouseOver(mouseX, mouseY, object))
+                object.mousePressed();
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
 
         for (Clickable object : objects) {
             if (mouseOver(mouseX, mouseY, object))
-                object.mouseClicked();
+                object.mouseReleased();
+            else
+                object.mouseReset();
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
+
+        for (Clickable object : objects) {
+            if (mouseOver(mouseX, mouseY, object))
+                object.mouseHover();
+            else
+                object.mouseReset();
         }
     }
 }

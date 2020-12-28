@@ -5,16 +5,17 @@ import com.candycrush.main.handler.ObjectHandler;
 import com.candycrush.main.resourceloader.TextureLoader;
 import com.candycrush.main.scene.MainMenu;
 import com.candycrush.main.uicomponent.Button;
+import com.candycrush.main.uicomponent.PlainImage;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.io.Serial;
+import java.util.Map;
 
 public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH * 9 / 12;
+    private int fps = 0;
     @Serial
     private static final long serialVersionUID = 8102020L;
     private static Thread thread;
@@ -27,14 +28,19 @@ public class Game extends Canvas implements Runnable {
     public Game() {
         new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
         this.addMouseListener(MOUSE_HANDLER);
-        //this.addMouseMotionListener(MOUSE_HANDLER);
+        this.addMouseMotionListener(MOUSE_HANDLER);
 
-        Button button = new Button();
-
+        // Main menu
         MainMenu mainMenu = new MainMenu();
+        Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png"));
+        PlainImage mainLogo = new PlainImage(TEXTURE_LOADER.getTexture("logo_main.png"), (WIDTH-400)/2,50, 400, 400);
+        Button exitButton = new Button("Exit",Color.WHITE,50, (WIDTH-250)/2, 625, 250, 50, TEXTURE_LOADER.getTexture("button_pink_long.png"));
         OBJECT_HANDLER.addObject(mainMenu);
-        OBJECT_HANDLER.addObject(button);
-        MOUSE_HANDLER.addObject(button);
+        OBJECT_HANDLER.addObject(playButton);
+        OBJECT_HANDLER.addObject(mainLogo);
+        OBJECT_HANDLER.addObject(exitButton);
+        MOUSE_HANDLER.addObject(playButton);
+        MOUSE_HANDLER.addObject(exitButton);
     }
 
     public static void main(String[] args) {
@@ -81,7 +87,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) { // 1000 milliseconds = 1 second
                 timer += 1000;
-//                System.out.println("FPS: " + frames);
+                fps = frames;
                 frames = 0;
             }
         }
@@ -100,13 +106,18 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Graphics2D g = (Graphics2D) bs.getDrawGraphics();
-        g.setRenderingHints(rh);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         OBJECT_HANDLER.render(g);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 10));
+        g.setColor(Color.BLACK);
+        g.drawString("FPS: " + fps, 10, 10);
 
         g.dispose();
         bs.show();
