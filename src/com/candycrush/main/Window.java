@@ -6,24 +6,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.Serial;
 
-public class Window extends Canvas {
-    @Serial
-    private static final long serialVersionUID = 8102020L;
-
+public class Window extends JFrame {
     public Window(int width, int height, String title, Game game) {
-        JFrame frame = new JFrame(title);
+        super(title);
 
         Dimension d = new Dimension(width, height);
         game.setPreferredSize(d);
         game.setMaximumSize(d);
         game.setMinimumSize(d);
 
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.getContentPane().add(game);
-        frame.pack();
-        frame.setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        getContentPane().add(game);
+        pack();
+        setVisible(true);
         game.start();
     }
 }

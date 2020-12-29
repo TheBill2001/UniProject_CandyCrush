@@ -10,7 +10,6 @@ import com.candycrush.main.uicomponent.PlainImage;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.io.Serial;
-import java.util.Map;
 
 public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
@@ -26,7 +25,7 @@ public class Game extends Canvas implements Runnable {
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
 
     public Game() {
-        new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
+        Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
         this.addMouseListener(MOUSE_HANDLER);
         this.addMouseMotionListener(MOUSE_HANDLER);
 
@@ -34,7 +33,13 @@ public class Game extends Canvas implements Runnable {
         MainMenu mainMenu = new MainMenu();
         Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png"));
         PlainImage mainLogo = new PlainImage(TEXTURE_LOADER.getTexture("logo_main.png"), (WIDTH-400)/2,50, 400, 400);
-        Button exitButton = new Button("Exit",Color.WHITE,50, (WIDTH-250)/2, 625, 250, 50, TEXTURE_LOADER.getTexture("button_pink_long.png"));
+        Button exitButton = new Button("Exit",Color.WHITE,50, (WIDTH-250)/2, 625, 250, 50, TEXTURE_LOADER.getTexture("button_pink_long.png")) {
+            @Override
+            public void action() {
+                window.dispose();
+                running = false;
+            }
+        };
         OBJECT_HANDLER.addObject(mainMenu);
         OBJECT_HANDLER.addObject(playButton);
         OBJECT_HANDLER.addObject(mainLogo);
