@@ -6,7 +6,9 @@ import java.util.ArrayList;
 
 public class MouseHandler extends MouseAdapter {
     private static MouseHandler handler = null;
-    private static final ArrayList<Clickable> objects = new ArrayList<>();
+    private final ArrayList<Clickable> objects = new ArrayList<>();
+    private final ArrayList<Clickable> objectsToRemove = new ArrayList<>();
+    private final ArrayList<Clickable> objectsToAdd = new ArrayList<>();
 
     public static MouseHandler getInstance() {
         if (handler == null) {
@@ -16,7 +18,11 @@ public class MouseHandler extends MouseAdapter {
     }
 
     public void addObject(Clickable object) {
-        objects.add(object);
+        objectsToAdd.add(object);
+    }
+
+    public void removeObject(Clickable object) {
+        objectsToRemove.add(object);
     }
 
     private boolean mouseOver(int mouseX, int mouseY, Clickable object) {
@@ -25,6 +31,14 @@ public class MouseHandler extends MouseAdapter {
         int dx = x + object.getWidth();
         int dy = y + object.getHeight();
         return mouseX > x && mouseX < dx && mouseY > y && mouseY < dy;
+    }
+
+    public void tick() {
+        objects.removeAll(objectsToRemove);
+        objects.addAll(objectsToAdd);
+
+        objectsToAdd.clear();
+        objectsToRemove.clear();
     }
 
     @Override

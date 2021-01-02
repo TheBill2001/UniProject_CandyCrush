@@ -6,7 +6,9 @@ import java.util.ArrayList;
 
 public class ObjectHandler {
     private static ObjectHandler objectHandler = null;
-    private static final ArrayList<GameObject> objects = new ArrayList<>();
+    private final ArrayList<GameObject> objects = new ArrayList<>();
+    private final ArrayList<GameObject> objectsToRemove = new ArrayList<>();
+    private final ArrayList<GameObject> objectsToAdd = new ArrayList<>();
 
     public static ObjectHandler getInstance() {
         if (objectHandler == null) {
@@ -19,6 +21,12 @@ public class ObjectHandler {
         for (GameObject object : objects) {
             object.tick();
         }
+
+        objects.removeAll(objectsToRemove);
+        objects.addAll(objectsToAdd);
+
+        objectsToAdd.clear();
+        objectsToRemove.clear();
     }
 
     public void render(Graphics2D graphic) {
@@ -28,6 +36,10 @@ public class ObjectHandler {
     }
 
     public void addObject(GameObject object) {
-        objects.add(object);
+        objectsToAdd.add(object);
+    }
+
+    public void removeObject(GameObject object) {
+        objectsToRemove.add(object);
     }
 }

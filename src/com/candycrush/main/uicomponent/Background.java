@@ -1,22 +1,21 @@
-package com.candycrush.main.scene;
+package com.candycrush.main.uicomponent;
 
 import com.candycrush.main.Game;
 import com.candycrush.main.handler.GameObject;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 
-public class MainMenu extends GameObject {
+public class Background extends GameObject {
     private static final int WIDTH = Game.WIDTH;
     private static final int HEIGHT = Game.HEIGHT;
     private static final float HUE_MIN = 0;
     private static final float HUE_MAX = 1;
-    private final float colorDelta = 0.01f;
+    private static final float colorDelta = 0.01f;
     private float hue = HUE_MIN;
     private Color color1 = Color.white;
     private Color color2 = Color.black;
 
-    public MainMenu() {
+    public Background() {
         super(0,0,0,0);
         System.out.println("Main Menu started!");
 

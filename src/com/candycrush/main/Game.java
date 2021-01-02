@@ -2,10 +2,12 @@ package com.candycrush.main;
 
 import com.candycrush.main.handler.MouseHandler;
 import com.candycrush.main.handler.ObjectHandler;
+import com.candycrush.main.resourceloader.LevelLoader;
 import com.candycrush.main.resourceloader.TextureLoader;
-import com.candycrush.main.scene.MainMenu;
+import com.candycrush.main.uicomponent.Background;
 import com.candycrush.main.uicomponent.Button;
 import com.candycrush.main.uicomponent.PlainImage;
+import com.candycrush.main.uicomponent.Window;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -14,38 +16,59 @@ import java.io.Serial;
 public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
     public static final int HEIGHT = WIDTH * 9 / 12;
-    private int fps = 0;
+    private static int fps = 0;
     @Serial
     private static final long serialVersionUID = 8102020L;
     private static Thread thread;
     private static boolean running = false;
-    private static State state = State.MAIN_MENU;
     private static final ObjectHandler OBJECT_HANDLER = ObjectHandler.getInstance();
     private static final TextureLoader TEXTURE_LOADER = TextureLoader.getInstance();
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
+    private static final LevelLoader LEVEL_LOADER = LevelLoader.getInstance();
 
     public Game() {
-        Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
+        com.candycrush.main.uicomponent.Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
         this.addMouseListener(MOUSE_HANDLER);
         this.addMouseMotionListener(MOUSE_HANDLER);
 
-        // Main menu
-        MainMenu mainMenu = new MainMenu();
-        Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png"));
+        // Components declaration
+        Background background = new Background();
         PlainImage mainLogo = new PlainImage(TEXTURE_LOADER.getTexture("logo_main.png"), (WIDTH-400)/2,50, 400, 400);
-        Button exitButton = new Button("Exit",Color.WHITE,50, (WIDTH-250)/2, 625, 250, 50, TEXTURE_LOADER.getTexture("button_pink_long.png")) {
+        Button exitButton;
+        Button playButton;
+
+        PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
+        Button backToMenu;
+
+        // Main menu
+        exitButton = new Button("Exit",Color.WHITE,45, (WIDTH-250)/2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png")) {
             @Override
             public void action() {
                 window.dispose();
                 running = false;
             }
         };
-        OBJECT_HANDLER.addObject(mainMenu);
+        playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png")) {
+            @Override
+            public void action() {
+                OBJECT_HANDLER.removeObject(exitButton);
+                OBJECT_HANDLER.removeObject(this);
+                OBJECT_HANDLER.removeObject(mainLogo);
+                MOUSE_HANDLER.removeObject(exitButton);
+                MOUSE_HANDLER.removeObject(this);
+
+                OBJECT_HANDLER.addObject(levelPanel);
+            }
+        };
+        OBJECT_HANDLER.addObject(background);
         OBJECT_HANDLER.addObject(playButton);
         OBJECT_HANDLER.addObject(mainLogo);
         OBJECT_HANDLER.addObject(exitButton);
         MOUSE_HANDLER.addObject(playButton);
         MOUSE_HANDLER.addObject(exitButton);
+
+        // Levels selector
+
     }
 
     public static void main(String[] args) {
@@ -61,7 +84,7 @@ public class Game extends Canvas implements Runnable {
 
     public synchronized void stop() {
         try {
-            thread.join();
+            thread.join(1000);
             running = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,6 +125,7 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         OBJECT_HANDLER.tick();
+        MOUSE_HANDLER.tick();
     }
 
     private void render() {
@@ -127,13 +151,4 @@ public class Game extends Canvas implements Runnable {
         g.dispose();
         bs.show();
     }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        Game.state = state;
-    }
-
 }

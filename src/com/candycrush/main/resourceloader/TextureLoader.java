@@ -24,18 +24,20 @@ public class TextureLoader {
     }
 
     public BufferedImage getTexture(String name) {
-        return texture.get(name);
+        if (texture.containsKey(name))
+            return texture.get(name);
+        else {
+            System.out.println("File \"" + name + "\" not found!");
+            return null;
+        }
     }
 
     private void loadTexture() {
         String path = "res/texture";
         BufferedImage image = null;
         String name;
-        File[] fileList;
-        File folder;
-
-        folder = new File(path);
-        fileList = folder.listFiles();
+        File folder = new File(path);
+        File[] fileList = folder.listFiles();
 
         if (fileList != null) {
             for (File file : fileList) {

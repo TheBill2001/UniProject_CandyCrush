@@ -1,5 +1,6 @@
-package com.candycrush.main;
+package com.candycrush.main.uicomponent;
 
+import com.candycrush.main.Game;
 import com.candycrush.main.handler.MouseHandler;
 
 import javax.swing.*;
