@@ -7,6 +7,7 @@ public class GameObject {
     protected int y;
     protected int width;
     protected int height;
+    protected boolean enable = true;
 
     public GameObject(int x, int y, int width, int height) {
         this.x = x;
@@ -16,7 +17,7 @@ public class GameObject {
     }
     public int getX() {
         return x;
-    };
+    }
 
     public int getY() {
         return y;
@@ -36,6 +37,14 @@ public class GameObject {
 
     public void tick() {
 
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public boolean isEnable() {
+        return enable;
     }
 
     public void render(Graphics2D graphic) {

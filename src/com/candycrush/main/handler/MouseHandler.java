@@ -47,7 +47,7 @@ public class MouseHandler extends MouseAdapter {
         int mouseY = e.getY();
 
         for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object))
+            if (mouseOver(mouseX, mouseY, object) && object.enable)
                 object.mousePressed();
         }
     }
@@ -58,7 +58,7 @@ public class MouseHandler extends MouseAdapter {
         int mouseY = e.getY();
 
         for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object))
+            if (mouseOver(mouseX, mouseY, object) && object.enable)
                 object.mouseReleased();
             else
                 object.mouseReset();

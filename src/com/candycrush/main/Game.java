@@ -1,6 +1,7 @@
 package com.candycrush.main;
 
 import com.candycrush.main.handler.MouseHandler;
+import com.candycrush.main.handler.ObjectGroup;
 import com.candycrush.main.handler.ObjectHandler;
 import com.candycrush.main.resourceloader.LevelLoader;
 import com.candycrush.main.resourceloader.TextureLoader;
@@ -31,44 +32,43 @@ public class Game extends Canvas implements Runnable {
         this.addMouseListener(MOUSE_HANDLER);
         this.addMouseMotionListener(MOUSE_HANDLER);
 
+        ObjectGroup mainMenu = new ObjectGroup();
+        ObjectGroup levelSelector = new ObjectGroup();
+
         // Components declaration
         Background background = new Background();
         PlainImage mainLogo = new PlainImage(TEXTURE_LOADER.getTexture("logo_main.png"), (WIDTH-400)/2,50, 400, 400);
-        Button exitButton;
-        Button playButton;
-
         PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
-        Button backToMenu;
 
-        // Main menu
-        exitButton = new Button("Exit",Color.WHITE,45, (WIDTH-250)/2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png")) {
+        Button exitButton = new Button("Exit",Color.WHITE,45, (WIDTH-250)/2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png")) {
             @Override
             public void action() {
                 window.dispose();
                 running = false;
             }
         };
-        playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png")) {
+        Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png")) {
             @Override
             public void action() {
-                OBJECT_HANDLER.removeObject(exitButton);
-                OBJECT_HANDLER.removeObject(this);
-                OBJECT_HANDLER.removeObject(mainLogo);
-                MOUSE_HANDLER.removeObject(exitButton);
-                MOUSE_HANDLER.removeObject(this);
-
-                OBJECT_HANDLER.addObject(levelPanel);
+                mainMenu.setEnable(false);
+                levelSelector.setEnable(true);
             }
         };
+        Button backToMenu;
+
         OBJECT_HANDLER.addObject(background);
-        OBJECT_HANDLER.addObject(playButton);
-        OBJECT_HANDLER.addObject(mainLogo);
-        OBJECT_HANDLER.addObject(exitButton);
+        OBJECT_HANDLER.addObject(mainMenu);
+        OBJECT_HANDLER.addObject(levelSelector);
+
         MOUSE_HANDLER.addObject(playButton);
         MOUSE_HANDLER.addObject(exitButton);
 
-        // Levels selector
+        mainMenu.addComponent(mainLogo);
+        mainMenu.addComponent(playButton);
+        mainMenu.addComponent(exitButton);
 
+        levelSelector.addComponent(levelPanel);
+        levelSelector.setEnable(false);
     }
 
     public static void main(String[] args) {

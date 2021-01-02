@@ -31,7 +31,8 @@ public class ObjectHandler {
 
     public void render(Graphics2D graphic) {
         for (GameObject object : objects) {
-            object.render(graphic);
+            if (object.isEnable())
+                object.render(graphic);
         }
     }
 
