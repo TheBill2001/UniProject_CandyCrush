@@ -1,7 +1,7 @@
 package com.candycrush.main.handler;
 
 import com.candycrush.main.object.abstraction.GenericObject;
-import com.candycrush.main.object.interface_.GroupInterface;
+import com.candycrush.main.object.concrete.ObjectGroup;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,7 +48,11 @@ public class ObjectHandler {
         objectsToRemove.add(object);
     }
 
-    public void addObjects(GroupInterface<GenericObject> group) {
+    public void addObjects(ObjectGroup group) {
         objectsToAdd.addAll(group.getObjects());
+    }
+
+    public void removeObjects(ObjectGroup group) {
+        objectsToRemove.removeAll(group.getObjects());
     }
 }

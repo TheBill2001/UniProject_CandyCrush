@@ -1,5 +1,5 @@
 package com.candycrush.main.object.interface_;
 
-public class ActionInterface {
-
+public interface ActionInterface {
+    void perform();
 }

@@ -2,26 +2,29 @@ package com.candycrush.main.object.concrete;
 
 import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.object.abstraction.GenericObject;
-import com.candycrush.main.object.interface_.GroupInterface;
-
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ClickableGroup extends GenericObject implements GroupInterface<Clickable> {
+public class ClickableGroup extends GenericObject {
     private final ArrayList<Clickable> objects = new ArrayList<>();
 
-    @Override
     public void addObject(Clickable object) {
         objects.add(object);
     }
 
-    @Override
+    public void addObjects(ClickableGroup group) {
+        objects.addAll(group.getObjects());
+    }
+
     public void removeObject(Clickable object) {
         objects.remove(object);
     }
 
-    @Override
+    public void removeObjects(ClickableGroup group) {
+        objects.removeAll(group.getObjects());
+    }
+
     public ArrayList<Clickable> getObjects() {
         return objects;
     }

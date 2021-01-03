@@ -1,35 +1,37 @@
 package com.candycrush.main.object.concrete;
 
 import com.candycrush.main.object.abstraction.GenericObject;
-import com.candycrush.main.object.interface_.GroupInterface;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ObjectGroup extends GenericObject implements GroupInterface<GenericObject> {
-    private final ArrayList<GenericObject> objects = new ArrayList<>();
+public class ObjectGroup extends GenericObject {
+    protected final ArrayList<GenericObject> objects = new ArrayList<>();
 
-    @Override
     public void addObject(GenericObject object) {
         objects.add(object);
     }
 
-    @Override
+    public void addObjects(ObjectGroup group) {
+        objects.addAll(group.getObjects());
+    }
+
     public void removeObject(GenericObject object) {
         objects.remove(object);
     }
 
-    @Override
+    public void removeObjects(ObjectGroup group) {
+        objects.removeAll(group.getObjects());
+    }
+
     public ArrayList<GenericObject> getObjects() {
         return objects;
     }
 
-    @Override
     public void setEnable(boolean enable) {
         this.enable = enable;
     }
 
-    @Override
     public void tick() {
         for (GenericObject object : objects) {
             object.setEnable(enable);

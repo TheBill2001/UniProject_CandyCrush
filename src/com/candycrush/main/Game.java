@@ -48,6 +48,12 @@ public class Game extends Canvas implements Runnable {
         Button exitButton = new Button("Exit",Color.WHITE,45, (WIDTH-250)/2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png"));
         Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png"));
 
+        exitButton.addAction(() -> running = false);
+        playButton.addAction(() -> {
+            mainMenuGroup.setEnable(false);
+            levelSelectorGroup.setEnable(true);
+        });
+
         mainMenuGroup.addObject(mainLogo);
         mainMenuGroup.addObject(playButton);
         mainMenuGroup.addObject(exitButton);
@@ -62,25 +68,33 @@ public class Game extends Canvas implements Runnable {
         Button levelPageLeft = new Button((WIDTH/2)-170, 820, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_left.png"));
         Button levelPageRight = new Button((WIDTH/2)+70, 820, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_right.png"));
 
-        int count = 0;
-        ArrayList<Level> levels = LEVEL_LOADER.getLevels();
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (count < LEVEL_LOADER.getNumberOfLevel()) {
-                    Button temp = new Button(levels.get(count++).getName(), Color.WHITE, 30, 150 * j + 50, 150 * i + 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
-
-                    levelButtons.addObject(temp);
-                }
-            }
-        }
-
-        levelSelectorGroup.addObject(levelButtons);
-        levelSelectorGroup.setEnable(false);
+        backToMenu.addAction(() -> {
+            levelSelectorGroup.setEnable(false);
+            mainMenuGroup.setEnable(true);
+        });
 
         levelSelectorGroup.addObject(levelPanel);
         levelSelectorGroup.addObject(backToMenu);
         levelSelectorGroup.addObject(levelPageLeft);
         levelSelectorGroup.addObject(levelPageRight);
+
+        int count = 0;
+        ArrayList<Level> levels = LEVEL_LOADER.getLevels();
+        for (int i = 1; i <= 4; i++) {
+            for (int j = 1; j <= 6; j++) {
+                if (count < LEVEL_LOADER.getNumberOfLevel()) {
+                    Button temp = new Button(levels.get(count++).getName(), Color.WHITE, 30, j*(WIDTH / 7)-50, i*(HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
+                    temp.addAction(() -> {
+                        levelSelectorGroup.setEnable(false);
+                        gameSceneGroup.setEnable(true);
+                    });
+                    levelButtons.addObject(temp);
+                    levelSelectorGroup.addObject(temp);
+                }
+            }
+        }
+
+        levelSelectorGroup.setEnable(false);
 
         OBJECT_HANDLER.addObject(levelSelectorGroup);
         MOUSE_HANDLER.addObjects(levelButtons);
