@@ -49,10 +49,6 @@ public class ObjectHandler {
     }
 
     public void addObjects(ObjectGroup group) {
-        objectsToAdd.addAll(group.getObjects());
-    }
-
-    public void removeObjects(ObjectGroup group) {
-        objectsToRemove.removeAll(group.getObjects());
+        objectsToAdd.add(group);
     }
 }

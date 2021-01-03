@@ -30,13 +30,6 @@ public class ClickableGroup extends GenericObject {
     }
 
     @Override
-    public void tick() {
-        for (Clickable object : objects) {
-            object.setEnable(enable);
-        }
-    }
-
-    @Override
     public void render(Graphics2D graphic) {
         for (Clickable object : objects) {
             if (object.isEnable())

@@ -32,12 +32,6 @@ public class ObjectGroup extends GenericObject {
         this.enable = enable;
     }
 
-    public void tick() {
-        for (GenericObject object : objects) {
-            object.setEnable(enable);
-        }
-    }
-
     @Override
     public void render(Graphics2D graphic) {
         for (GenericObject object : objects) {

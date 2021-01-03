@@ -30,6 +30,7 @@ public class Game extends Canvas implements Runnable {
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
     private static final LevelLoader LEVEL_LOADER = LevelLoader.getInstance();
     private final Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
+    private static int pageNum = 0;
 
     public Game() {
         this.addMouseListener(MOUSE_HANDLER);
@@ -64,9 +65,9 @@ public class Game extends Canvas implements Runnable {
 
         // Levels selector
         PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
-        Button backToMenu = new Button((WIDTH/2)-50,820,100,100,TEXTURE_LOADER.getTexture("back_to_menu.png")) ;
-        Button levelPageLeft = new Button((WIDTH/2)-170, 820, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_left.png"));
-        Button levelPageRight = new Button((WIDTH/2)+70, 820, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_right.png"));
+        Button backToMenu = new Button((WIDTH/2)-50,800,100,100,TEXTURE_LOADER.getTexture("back_to_menu.png")) ;
+        Button levelPageLeft = new Button((WIDTH/2)-170, 800, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_left.png"));
+        Button levelPageRight = new Button((WIDTH/2)+70, 800, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_right.png"));
 
         backToMenu.addAction(() -> {
             levelSelectorGroup.setEnable(false);
@@ -78,21 +79,51 @@ public class Game extends Canvas implements Runnable {
         levelSelectorGroup.addObject(levelPageLeft);
         levelSelectorGroup.addObject(levelPageRight);
 
-        int count = 0;
-        ArrayList<Level> levels = LEVEL_LOADER.getLevels();
-        for (int i = 1; i <= 4; i++) {
-            for (int j = 1; j <= 6; j++) {
-                if (count < LEVEL_LOADER.getNumberOfLevel()) {
-                    Button temp = new Button(levels.get(count++).getName(), Color.WHITE, 30, j*(WIDTH / 7)-50, i*(HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
-                    temp.addAction(() -> {
-                        levelSelectorGroup.setEnable(false);
-                        gameSceneGroup.setEnable(true);
-                    });
-                    levelButtons.addObject(temp);
-                    levelSelectorGroup.addObject(temp);
+        int pageCount;
+        if (LEVEL_LOADER.getNumberOfLevel() % 24 != 0)
+            pageCount = (LEVEL_LOADER.getNumberOfLevel() / 24) + 1;
+        else
+            pageCount = LEVEL_LOADER.getNumberOfLevel() / 24;
+
+        ArrayList<ObjectGroup> pages = new ArrayList<>();
+        for (int i = 0; i < pageCount; i++) {
+            pages.add(new ObjectGroup());
+            ArrayList<Level> levels = LEVEL_LOADER.getLevels();
+            int x, y = 1;
+            for (int j = i*24; j < (i+1)*24 && j < LEVEL_LOADER.getNumberOfLevel(); j++) {
+                if ((j+1) % 6 == 0) {
+                    x = 6;
+                } else {
+                    x = (j + 1) % 6;
+                    y = (j + 1 - 25*i) / 6 + 1;
                 }
+                Button temp = new Button(levels.get(j).getName(), Color.WHITE, 30, x*(WIDTH / 7)-50, y*(HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
+                temp.addAction(() -> {
+                    levelSelectorGroup.setEnable(false);
+                    gameSceneGroup.setEnable(true);
+                });
+                pages.get(i).addObject(temp);
+                pages.get(i).setEnable(false);
+
+                levelButtons.addObject(temp);
             }
+            levelSelectorGroup.addObject(pages.get(i));
         }
+
+        pages.get(pageNum).setEnable(true);
+        levelPageLeft.addAction(() -> {
+            if (pageNum >= 0) {
+                pages.get(pageNum).setEnable(false);
+                pages.get(--pageNum).setEnable(true);
+            }
+        });
+
+        levelPageRight.addAction(() -> {
+            if (pageNum <= pageCount-1) {
+                pages.get(pageNum).setEnable(false);
+                pages.get(++pageNum).setEnable(true);
+            }
+        });
 
         levelSelectorGroup.setEnable(false);
 
@@ -101,6 +132,10 @@ public class Game extends Canvas implements Runnable {
         MOUSE_HANDLER.addObject(backToMenu);
         MOUSE_HANDLER.addObject(levelPageLeft);
         MOUSE_HANDLER.addObject(levelPageRight);
+
+        // Game action!
+
+
     }
 
     public static void main(String[] args) {
