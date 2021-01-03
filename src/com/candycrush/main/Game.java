@@ -1,18 +1,21 @@
 package com.candycrush.main;
 
 import com.candycrush.main.handler.MouseHandler;
-import com.candycrush.main.handler.ObjectGroup;
 import com.candycrush.main.handler.ObjectHandler;
+import com.candycrush.main.object.concrete.ClickableGroup;
+import com.candycrush.main.object.concrete.Level;
+import com.candycrush.main.object.concrete.ObjectGroup;
+import com.candycrush.main.object.uicomponent.Background;
+import com.candycrush.main.object.uicomponent.Button;
+import com.candycrush.main.object.uicomponent.PlainImage;
+import com.candycrush.main.object.uicomponent.Window;
 import com.candycrush.main.resourceloader.LevelLoader;
 import com.candycrush.main.resourceloader.TextureLoader;
-import com.candycrush.main.uicomponent.Background;
-import com.candycrush.main.uicomponent.Button;
-import com.candycrush.main.uicomponent.PlainImage;
-import com.candycrush.main.uicomponent.Window;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.io.Serial;
+import java.util.ArrayList;
 
 public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 1280;
@@ -26,49 +29,64 @@ public class Game extends Canvas implements Runnable {
     private static final TextureLoader TEXTURE_LOADER = TextureLoader.getInstance();
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
     private static final LevelLoader LEVEL_LOADER = LevelLoader.getInstance();
+    private final Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
 
     public Game() {
-        com.candycrush.main.uicomponent.Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
         this.addMouseListener(MOUSE_HANDLER);
         this.addMouseMotionListener(MOUSE_HANDLER);
 
-        ObjectGroup mainMenu = new ObjectGroup();
-        ObjectGroup levelSelector = new ObjectGroup();
+        ObjectGroup mainMenuGroup = new ObjectGroup();
+        ObjectGroup levelSelectorGroup = new ObjectGroup();
+        ClickableGroup levelButtons = new ClickableGroup();
+        ObjectGroup gameSceneGroup = new ObjectGroup();
 
-        // Components declaration
         Background background = new Background();
-        PlainImage mainLogo = new PlainImage(TEXTURE_LOADER.getTexture("logo_main.png"), (WIDTH-400)/2,50, 400, 400);
-        PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
-
-        Button exitButton = new Button("Exit",Color.WHITE,45, (WIDTH-250)/2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png")) {
-            @Override
-            public void action() {
-                window.dispose();
-                running = false;
-            }
-        };
-        Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png")) {
-            @Override
-            public void action() {
-                mainMenu.setEnable(false);
-                levelSelector.setEnable(true);
-            }
-        };
-        Button backToMenu;
-
         OBJECT_HANDLER.addObject(background);
-        OBJECT_HANDLER.addObject(mainMenu);
-        OBJECT_HANDLER.addObject(levelSelector);
 
+        // Main menu
+        PlainImage mainLogo = new PlainImage(TEXTURE_LOADER.getTexture("logo_main.png"), (WIDTH-400)/2,50, 400, 400);
+        Button exitButton = new Button("Exit",Color.WHITE,45, (WIDTH-250)/2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png"));
+        Button playButton = new Button("Play", Color.WHITE, 50,(WIDTH-250)/2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png"));
+
+        mainMenuGroup.addObject(mainLogo);
+        mainMenuGroup.addObject(playButton);
+        mainMenuGroup.addObject(exitButton);
+
+        OBJECT_HANDLER.addObject(mainMenuGroup);
         MOUSE_HANDLER.addObject(playButton);
         MOUSE_HANDLER.addObject(exitButton);
 
-        mainMenu.addComponent(mainLogo);
-        mainMenu.addComponent(playButton);
-        mainMenu.addComponent(exitButton);
+        // Levels selector
+        PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
+        Button backToMenu = new Button((WIDTH/2)-50,820,100,100,TEXTURE_LOADER.getTexture("back_to_menu.png")) ;
+        Button levelPageLeft = new Button((WIDTH/2)-170, 820, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_left.png"));
+        Button levelPageRight = new Button((WIDTH/2)+70, 820, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_right.png"));
 
-        levelSelector.addComponent(levelPanel);
-        levelSelector.setEnable(false);
+        int count = 0;
+        ArrayList<Level> levels = LEVEL_LOADER.getLevels();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (count < LEVEL_LOADER.getNumberOfLevel()) {
+                    Button temp = new Button(levels.get(count++).getName(), Color.WHITE, 30, 150 * j + 50, 150 * i + 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
+
+                    levelButtons.addObject(temp);
+                }
+            }
+        }
+
+        levelSelectorGroup.addObject(levelButtons);
+        levelSelectorGroup.setEnable(false);
+
+        levelSelectorGroup.addObject(levelPanel);
+        levelSelectorGroup.addObject(backToMenu);
+        levelSelectorGroup.addObject(levelPageLeft);
+        levelSelectorGroup.addObject(levelPageRight);
+
+        OBJECT_HANDLER.addObject(levelSelectorGroup);
+        MOUSE_HANDLER.addObjects(levelButtons);
+        MOUSE_HANDLER.addObject(backToMenu);
+        MOUSE_HANDLER.addObject(levelPageLeft);
+        MOUSE_HANDLER.addObject(levelPageRight);
     }
 
     public static void main(String[] args) {
@@ -84,7 +102,8 @@ public class Game extends Canvas implements Runnable {
 
     public synchronized void stop() {
         try {
-            thread.join(1000);
+            thread.join(10);
+            window.dispose();
             running = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,8 +143,8 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-        OBJECT_HANDLER.tick();
         MOUSE_HANDLER.tick();
+        OBJECT_HANDLER.tick();
     }
 
     private void render() {

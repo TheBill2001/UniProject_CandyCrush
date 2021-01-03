@@ -1,11 +1,11 @@
-package com.candycrush.main.uicomponent;
+package com.candycrush.main.object.uicomponent;
 
 import com.candycrush.main.Game;
-import com.candycrush.main.handler.GameObject;
+import com.candycrush.main.object.abstraction.GenericObject;
 
 import java.awt.*;
 
-public class Background extends GameObject {
+public class Background extends GenericObject {
     private static final int WIDTH = Game.WIDTH;
     private static final int HEIGHT = Game.HEIGHT;
     private static final float HUE_MIN = 0;
@@ -15,15 +15,8 @@ public class Background extends GameObject {
     private Color color1 = Color.white;
     private Color color2 = Color.black;
 
-    public Background() {
-        super(0,0,0,0);
-        System.out.println("Main Menu started!");
-
-    }
-
     @Override
     public void tick() {
-        // Color changing gradient
         hue += colorDelta / 20;
         if (hue > HUE_MAX) {
             hue = HUE_MIN;

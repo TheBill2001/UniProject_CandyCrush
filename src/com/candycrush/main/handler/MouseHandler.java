@@ -1,5 +1,8 @@
 package com.candycrush.main.handler;
 
+import com.candycrush.main.object.abstraction.Clickable;
+import com.candycrush.main.object.interface_.GroupInterface;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -25,6 +28,10 @@ public class MouseHandler extends MouseAdapter {
         objectsToRemove.add(object);
     }
 
+    public void addObjects(GroupInterface<Clickable> group) {
+        objectsToAdd.addAll(group.getObjects());
+    }
+
     private boolean mouseOver(int mouseX, int mouseY, Clickable object) {
         int x = object.getX();
         int y = object.getY();
@@ -47,7 +54,7 @@ public class MouseHandler extends MouseAdapter {
         int mouseY = e.getY();
 
         for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object) && object.enable)
+            if (mouseOver(mouseX, mouseY, object) && object.isEnable())
                 object.mousePressed();
         }
     }
@@ -58,7 +65,7 @@ public class MouseHandler extends MouseAdapter {
         int mouseY = e.getY();
 
         for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object) && object.enable)
+            if (mouseOver(mouseX, mouseY, object) && object.isEnable())
                 object.mouseReleased();
             else
                 object.mouseReset();
@@ -71,7 +78,7 @@ public class MouseHandler extends MouseAdapter {
         int mouseY = e.getY();
 
         for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object))
+            if (mouseOver(mouseX, mouseY, object) && object.isEnable())
                 object.mouseHover();
             else
                 object.mouseReset();

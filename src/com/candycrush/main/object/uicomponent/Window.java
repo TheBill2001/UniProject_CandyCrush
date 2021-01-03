@@ -1,4 +1,4 @@
-package com.candycrush.main.uicomponent;
+package com.candycrush.main.object.uicomponent;
 
 import com.candycrush.main.Game;
 import com.candycrush.main.handler.MouseHandler;

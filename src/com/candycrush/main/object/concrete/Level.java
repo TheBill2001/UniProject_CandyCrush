@@ -1,10 +1,10 @@
-package com.candycrush.main.handler;
+package com.candycrush.main.object.concrete;
 
 import java.util.Properties;
 
-public class Level {
+public class Level implements Comparable<Level> {
     private String name;
-    private boolean[][] empty = new boolean[9][9];
+    private final boolean[][] empty = new boolean[9][9];
 
     public Level(Properties properties) {
         setProperties(properties);
@@ -44,5 +44,10 @@ public class Level {
 
     public boolean[][] getEmpty() {
         return empty;
+    }
+
+    @Override
+    public int compareTo(Level level) {
+        return Integer.parseInt(name) - Integer.parseInt(level.getName());
     }
 }

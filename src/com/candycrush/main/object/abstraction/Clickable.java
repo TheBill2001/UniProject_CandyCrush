@@ -1,8 +1,9 @@
-package com.candycrush.main.handler;
+package com.candycrush.main.object.abstraction;
 
 public abstract class Clickable extends GameObject {
+
     public Clickable(int x, int y, int width, int height) {
-        super(x,y,width,height);
+        super(x, y, width, height);
     }
 
     public abstract void mousePressed ();

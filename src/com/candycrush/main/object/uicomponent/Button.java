@@ -1,6 +1,6 @@
-package com.candycrush.main.uicomponent;
+package com.candycrush.main.object.uicomponent;
 
-import com.candycrush.main.handler.Clickable;
+import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.handler.SpriteHandler;
 
 import java.awt.*;
@@ -8,10 +8,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Button extends Clickable {
-    private String string;
+    private String string = "";
     private Color color;
     private int size;
-    private ArrayList<BufferedImage> textures;
+    private final ArrayList<BufferedImage> textures;
     private int state = 0;
 
     public Button(String string, Color color,int size, int x, int y, int width, int height, BufferedImage spriteSheet) {
@@ -22,8 +22,9 @@ public class Button extends Clickable {
         this.textures = SpriteHandler.divideSprite(spriteSheet,1,3);
     }
 
-    public void action() {
-
+    public Button(int x, int y, int width, int height, BufferedImage spriteSheet) {
+        super(x, y, width, height);
+        this.textures = SpriteHandler.divideSprite(spriteSheet,1,3);
     }
 
     @Override
@@ -34,7 +35,6 @@ public class Button extends Clickable {
     @Override
     public void mouseReleased() {
         state = 0;
-        action();
     }
 
     @Override

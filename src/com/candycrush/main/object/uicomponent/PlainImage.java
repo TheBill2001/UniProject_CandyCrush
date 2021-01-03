@@ -1,6 +1,6 @@
-package com.candycrush.main.uicomponent;
+package com.candycrush.main.object.uicomponent;
 
-import com.candycrush.main.handler.GameObject;
+import com.candycrush.main.object.abstraction.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

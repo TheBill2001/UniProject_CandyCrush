@@ -1,16 +1,18 @@
 package com.candycrush.main.resourceloader;
 
-import com.candycrush.main.handler.Level;
+import com.candycrush.main.object.concrete.Level;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Properties;
 
 public class LevelLoader {
     private static final ArrayList<Level> levels = new ArrayList<>();
     private static LevelLoader levelLoader = null;
+    private static int total = 0;
 
     private LevelLoader() {
         System.out.println("Start loading level configs!");
@@ -40,9 +42,20 @@ public class LevelLoader {
                     e.printStackTrace();
                 }
                 levels.add(new Level(properties));
+                total++;
             }
         } else {
             System.out.println("Level folder not found!");
         }
+
+        Collections.sort(levels);
+    }
+
+    public ArrayList<Level> getLevels() {
+        return levels;
+    }
+
+    public int getNumberOfLevel() {
+        return total;
     }
 }
