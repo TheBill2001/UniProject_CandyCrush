@@ -1,14 +1,14 @@
 package com.candycrush.main;
 
+import com.candycrush.main.handler.CandiesHandler;
 import com.candycrush.main.handler.MouseHandler;
 import com.candycrush.main.handler.ObjectHandler;
 import com.candycrush.main.object.concrete.ClickableGroup;
 import com.candycrush.main.object.concrete.Level;
 import com.candycrush.main.object.concrete.ObjectGroup;
-import com.candycrush.main.object.uicomponent.Background;
 import com.candycrush.main.object.uicomponent.Button;
-import com.candycrush.main.object.uicomponent.PlainImage;
 import com.candycrush.main.object.uicomponent.Window;
+import com.candycrush.main.object.uicomponent.*;
 import com.candycrush.main.resourceloader.LevelLoader;
 import com.candycrush.main.resourceloader.TextureLoader;
 
@@ -29,17 +29,23 @@ public class Game extends Canvas implements Runnable {
     private static final TextureLoader TEXTURE_LOADER = TextureLoader.getInstance();
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
     private static final LevelLoader LEVEL_LOADER = LevelLoader.getInstance();
+    private static final CandiesHandler CANDIES_HANDLER = CandiesHandler.getInstance();
     private final Window window = new Window(WIDTH, HEIGHT, "Candy Crush - Student Game!", this);
     private static int pageNum = 0;
+    private static Level currentLevel = null;
 
     public Game() {
         this.addMouseListener(MOUSE_HANDLER);
         this.addMouseMotionListener(MOUSE_HANDLER);
 
         ObjectGroup mainMenuGroup = new ObjectGroup();
+        ClickableGroup mainMenuClickable = new ClickableGroup();
         ObjectGroup levelSelectorGroup = new ObjectGroup();
-        ClickableGroup levelButtons = new ClickableGroup();
+        ClickableGroup levelSelectorClickable = new ClickableGroup();
         ObjectGroup gameSceneGroup = new ObjectGroup();
+        ClickableGroup gameSceneClickable = new ClickableGroup();
+
+        ArrayList<ClickableGroup> pages = new ArrayList<>();
 
         Background background = new Background();
         OBJECT_HANDLER.addObject(background);
@@ -51,27 +57,46 @@ public class Game extends Canvas implements Runnable {
 
         exitButton.addAction(() -> running = false);
         playButton.addAction(() -> {
-            mainMenuGroup.setEnable(false);
-            levelSelectorGroup.setEnable(true);
+            MOUSE_HANDLER.addObject(levelSelectorClickable);
+            MOUSE_HANDLER.removeObject(mainMenuClickable);
+            MOUSE_HANDLER.addObject(pages.get(pageNum));
+
+            OBJECT_HANDLER.removeObject(mainMenuGroup);
+            OBJECT_HANDLER.addObject(levelSelectorGroup);
+            OBJECT_HANDLER.addObject(pages.get(pageNum));
         });
 
         mainMenuGroup.addObject(mainLogo);
         mainMenuGroup.addObject(playButton);
         mainMenuGroup.addObject(exitButton);
 
+        mainMenuClickable.addObject(playButton);
+        mainMenuClickable.addObject(exitButton);
+
         OBJECT_HANDLER.addObject(mainMenuGroup);
-        MOUSE_HANDLER.addObject(playButton);
-        MOUSE_HANDLER.addObject(exitButton);
+        MOUSE_HANDLER.addObject(mainMenuClickable);
 
         // Levels selector
-        PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
         Button backToMenu = new Button((WIDTH/2)-50,800,100,100,TEXTURE_LOADER.getTexture("back_to_menu.png")) ;
         Button levelPageLeft = new Button((WIDTH/2)-170, 800, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_left.png"));
         Button levelPageRight = new Button((WIDTH/2)+70, 800, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_right.png"));
+        PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
+
+        Grid grid = new Grid();
 
         backToMenu.addAction(() -> {
-            levelSelectorGroup.setEnable(false);
-            mainMenuGroup.setEnable(true);
+            OBJECT_HANDLER.removeObject(levelSelectorGroup);
+            OBJECT_HANDLER.removeObject(pages.get(pageNum));
+            OBJECT_HANDLER.removeObject(gameSceneGroup);
+            OBJECT_HANDLER.addObject(mainMenuGroup);
+
+            MOUSE_HANDLER.addObject(mainMenuClickable);
+            MOUSE_HANDLER.removeObject(pages.get(pageNum));
+            MOUSE_HANDLER.removeObject(levelSelectorClickable);
+            MOUSE_HANDLER.removeObject(gameSceneClickable);
+
+            CANDIES_HANDLER.setLevel(null);
+            backToMenu.setXY((WIDTH/2)-50,800);
         });
 
         levelSelectorGroup.addObject(levelPanel);
@@ -79,15 +104,18 @@ public class Game extends Canvas implements Runnable {
         levelSelectorGroup.addObject(levelPageLeft);
         levelSelectorGroup.addObject(levelPageRight);
 
+        levelSelectorClickable.addObject(levelPageLeft);
+        levelSelectorClickable.addObject(levelPageRight);
+        levelSelectorClickable.addObject(backToMenu);
+
         int pageCount;
         if (LEVEL_LOADER.getNumberOfLevel() % 24 != 0)
             pageCount = (LEVEL_LOADER.getNumberOfLevel() / 24) + 1;
         else
             pageCount = LEVEL_LOADER.getNumberOfLevel() / 24;
 
-        ArrayList<ObjectGroup> pages = new ArrayList<>();
         for (int i = 0; i < pageCount; i++) {
-            pages.add(new ObjectGroup());
+            pages.add(new ClickableGroup());
             ArrayList<Level> levels = LEVEL_LOADER.getLevels();
             int x, y = 1;
             for (int j = i*24; j < (i+1)*24 && j < LEVEL_LOADER.getNumberOfLevel(); j++) {
@@ -98,44 +126,71 @@ public class Game extends Canvas implements Runnable {
                     y = (j + 1 - 25*i) / 6 + 1;
                 }
                 Button temp = new Button(levels.get(j).getName(), Color.WHITE, 30, x*(WIDTH / 7)-50, y*(HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
+                currentLevel = levels.get(j);
                 temp.addAction(() -> {
-                    levelSelectorGroup.setEnable(false);
-                    gameSceneGroup.setEnable(true);
+                    OBJECT_HANDLER.removeObject(levelSelectorGroup);
+                    OBJECT_HANDLER.addObject(gameSceneGroup);
+                    OBJECT_HANDLER.removeObject(pages.get(pageNum));
+
+                    MOUSE_HANDLER.removeObject(levelSelectorClickable);
+                    MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                    MOUSE_HANDLER.addObject(gameSceneClickable);
+
+                    backToMenu.setXY(30,830);
+                    grid.setUpGrid(currentLevel);
+                    CANDIES_HANDLER.setLevel(currentLevel);
                 });
                 pages.get(i).addObject(temp);
-                pages.get(i).setEnable(false);
-
-                levelButtons.addObject(temp);
             }
-            levelSelectorGroup.addObject(pages.get(i));
         }
 
-        pages.get(pageNum).setEnable(true);
         levelPageLeft.addAction(() -> {
-            if (pageNum >= 0) {
-                pages.get(pageNum).setEnable(false);
-                pages.get(--pageNum).setEnable(true);
+            if (pageNum > 0) {
+                OBJECT_HANDLER.removeObject(pages.get(pageNum));
+                OBJECT_HANDLER.addObject(pages.get(pageNum-1));
+                MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                MOUSE_HANDLER.addObject(pages.get(pageNum-1));
+                pageNum--;
             }
         });
 
         levelPageRight.addAction(() -> {
-            if (pageNum <= pageCount-1) {
-                pages.get(pageNum).setEnable(false);
-                pages.get(++pageNum).setEnable(true);
+            if (pageNum < pageCount-1) {
+                OBJECT_HANDLER.removeObject(pages.get(pageNum));
+                OBJECT_HANDLER.addObject(pages.get(pageNum+1));
+                MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                MOUSE_HANDLER.addObject(pages.get(pageNum+1));
+                pageNum++;
             }
         });
 
-        levelSelectorGroup.setEnable(false);
-
-        OBJECT_HANDLER.addObject(levelSelectorGroup);
-        MOUSE_HANDLER.addObjects(levelButtons);
-        MOUSE_HANDLER.addObject(backToMenu);
-        MOUSE_HANDLER.addObject(levelPageLeft);
-        MOUSE_HANDLER.addObject(levelPageRight);
 
         // Game action!
+        PlainImage gameHud = new PlainImage(TEXTURE_LOADER.getTexture("hud.png"),0,0,300,800);
+        Text target = new Text("Target: "+currentLevel.getTarget(),"TimesRoman",Color.BLUE, 40, 50,20,200,100);
+        Text move = new Text("Move: ","TimesRoman",Color.BLUE, 50, 50,180,200,100) {
+            @Override
+            public void tick() {
+                setText("Move: " + currentLevel.getMove());
+            }
+        };
+        Text scoreT = new Text("Score:","TimesRoman",Color.BLUE, 50, 15,350,200,100);
+        Text scoreN = new Text("", "TimesRoman",Color.BLUE, 50, 15,400,200,100) {
+            @Override
+            public void tick() {
+                setText("" + currentLevel.getScore());
+            }
+        };
 
-
+        gameSceneGroup.addObject(gameHud);
+        gameSceneGroup.addObject(target);
+        gameSceneGroup.addObject(move);
+        gameSceneGroup.addObject(scoreT);
+        gameSceneGroup.addObject(scoreN);
+        gameSceneGroup.addObject(grid);
+        gameSceneGroup.addObject(CANDIES_HANDLER.getCandies());
+        gameSceneGroup.addObject(backToMenu);
+        gameSceneClickable.addObject(backToMenu);
     }
 
     public static void main(String[] args) {
@@ -194,6 +249,7 @@ public class Game extends Canvas implements Runnable {
     private void tick() {
         MOUSE_HANDLER.tick();
         OBJECT_HANDLER.tick();
+        CANDIES_HANDLER.tick();
     }
 
     private void render() {
@@ -212,6 +268,7 @@ public class Game extends Canvas implements Runnable {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         OBJECT_HANDLER.render(g);
+
         g.setFont(new Font("TimesRoman", Font.BOLD, 10));
         g.setColor(Color.BLACK);
         g.drawString("FPS: " + fps, 10, 10);

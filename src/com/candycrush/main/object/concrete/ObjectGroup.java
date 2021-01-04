@@ -12,31 +12,25 @@ public class ObjectGroup extends GenericObject {
         objects.add(object);
     }
 
-    public void addObjects(ObjectGroup group) {
-        objects.addAll(group.getObjects());
-    }
-
     public void removeObject(GenericObject object) {
         objects.remove(object);
-    }
-
-    public void removeObjects(ObjectGroup group) {
-        objects.removeAll(group.getObjects());
     }
 
     public ArrayList<GenericObject> getObjects() {
         return objects;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    @Override
+    public void tick() {
+        for (GenericObject object : objects) {
+            object.tick();
+        }
     }
 
     @Override
     public void render(Graphics2D graphic) {
         for (GenericObject object : objects) {
-            if (object.isEnable())
-                object.render(graphic);
+            object.render(graphic);
         }
     }
 }

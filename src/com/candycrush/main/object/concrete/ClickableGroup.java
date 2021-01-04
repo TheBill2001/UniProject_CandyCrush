@@ -1,28 +1,23 @@
 package com.candycrush.main.object.concrete;
 
 import com.candycrush.main.object.abstraction.Clickable;
-import com.candycrush.main.object.abstraction.GenericObject;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ClickableGroup extends GenericObject {
+public class ClickableGroup extends Clickable {
     private final ArrayList<Clickable> objects = new ArrayList<>();
+
+    public ClickableGroup() {
+        super(0,0,0,0);
+    }
 
     public void addObject(Clickable object) {
         objects.add(object);
     }
 
-    public void addObjects(ClickableGroup group) {
-        objects.addAll(group.getObjects());
-    }
-
     public void removeObject(Clickable object) {
         objects.remove(object);
-    }
-
-    public void removeObjects(ClickableGroup group) {
-        objects.removeAll(group.getObjects());
     }
 
     public ArrayList<Clickable> getObjects() {
@@ -30,10 +25,44 @@ public class ClickableGroup extends GenericObject {
     }
 
     @Override
+    public void tick() {
+        for (Clickable object : objects) {
+            object.tick();
+        }
+    }
+
+    @Override
     public void render(Graphics2D graphic) {
         for (Clickable object : objects) {
-            if (object.isEnable())
-                object.render(graphic);
+            object.render(graphic);
+        }
+    }
+
+    @Override
+    public void mousePressed() {
+        for (Clickable object : objects) {
+            object.mousePressed();
+        }
+    }
+
+    @Override
+    public void mouseReleased() {
+        for (Clickable object : objects) {
+            object.mouseReleased();
+        }
+    }
+
+    @Override
+    public void mouseHover() {
+        for (Clickable object : objects) {
+            object.mouseHover();
+        }
+    }
+
+    @Override
+    public void mouseReset() {
+        for (Clickable object : objects) {
+            object.mouseReset();
         }
     }
 }

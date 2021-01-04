@@ -24,12 +24,16 @@ public class MouseHandler extends MouseAdapter {
         objectsToAdd.add(object);
     }
 
+    public void addObject(ClickableGroup group) {
+        objectsToAdd.addAll(group.getObjects());
+    }
+
     public void removeObject(Clickable object) {
         objectsToRemove.add(object);
     }
 
-    public void addObjects(ClickableGroup group) {
-        objectsToAdd.addAll(group.getObjects());
+    public void removeObject(ClickableGroup group) {
+        objectsToRemove.addAll(group.getObjects());
     }
 
     private boolean mouseOver(int mouseX, int mouseY, Clickable object) {
@@ -53,9 +57,10 @@ public class MouseHandler extends MouseAdapter {
         int mouseX = e.getX();
         int mouseY = e.getY();
 
-        for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object) && object.isEnable())
-                object.mousePressed();
+        for (int i=0; i<objects.size(); i++) {
+            if (mouseOver(mouseX, mouseY, objects.get(i))) {
+                objects.get(i).mousePressed();
+            }
         }
     }
 
@@ -64,12 +69,12 @@ public class MouseHandler extends MouseAdapter {
         int mouseX = e.getX();
         int mouseY = e.getY();
 
-        for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object) && object.isEnable()) {
-                object.mouseReleased();
-                object.performAction();
+        for (int i=0; i<objects.size(); i++) {
+            if (mouseOver(mouseX, mouseY, objects.get(i))) {
+                objects.get(i).mouseReleased();
+                objects.get(i).performAction();
             } else
-                object.mouseReset();
+                objects.get(i).mouseReset();
         }
     }
 
@@ -78,11 +83,11 @@ public class MouseHandler extends MouseAdapter {
         int mouseX = e.getX();
         int mouseY = e.getY();
 
-        for (Clickable object : objects) {
-            if (mouseOver(mouseX, mouseY, object) && object.isEnable())
-                object.mouseHover();
-            else
-                object.mouseReset();
+        for (int i=0; i<objects.size(); i++) {
+            if (mouseOver(mouseX, mouseY, objects.get(i))) {
+                objects.get(i).mouseHover();
+            } else
+                objects.get(i).mouseReset();
         }
     }
 }

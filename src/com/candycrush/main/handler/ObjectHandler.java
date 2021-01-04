@@ -1,7 +1,6 @@
 package com.candycrush.main.handler;
 
 import com.candycrush.main.object.abstraction.GenericObject;
-import com.candycrush.main.object.concrete.ObjectGroup;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,8 +21,7 @@ public class ObjectHandler {
 
     public void tick() {
         for (GenericObject object : objects) {
-            if (object.isEnable())
-                object.tick();
+            object.tick();
         }
 
         objects.removeAll(objectsToRemove);
@@ -35,8 +33,7 @@ public class ObjectHandler {
 
     public void render(Graphics2D graphic) {
         for (GenericObject object : objects) {
-            if (object.isEnable())
-                object.render(graphic);
+            object.render(graphic);
         }
     }
 
@@ -46,9 +43,5 @@ public class ObjectHandler {
 
     public void removeObject(GenericObject object) {
         objectsToRemove.add(object);
-    }
-
-    public void addObjects(ObjectGroup group) {
-        objectsToAdd.add(group);
     }
 }
