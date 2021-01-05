@@ -28,6 +28,10 @@ public class Button extends Clickable {
         this.textures = SpriteHandler.divideSprite(spriteSheet,1,3);
     }
 
+    public String getString() {
+        return string;
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         state = 2;

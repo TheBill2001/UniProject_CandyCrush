@@ -18,6 +18,14 @@ public class Text extends GameObject {
         this.size = size;
     }
 
+    public Text(String font, Color color, int size, int x, int y, int width, int height) {
+        super(x, y, width, height);
+        this.text = "";
+        this.font = font;
+        this.color = color;
+        this.size = size;
+    }
+
     public void setText(String text) {
         this.text = text;
     }

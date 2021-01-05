@@ -3,6 +3,7 @@ package com.candycrush.main;
 import com.candycrush.main.handler.CandiesHandler;
 import com.candycrush.main.handler.MouseHandler;
 import com.candycrush.main.handler.ObjectHandler;
+import com.candycrush.main.object.abstraction.Action;
 import com.candycrush.main.object.concrete.ClickableGroup;
 import com.candycrush.main.object.concrete.Level;
 import com.candycrush.main.object.concrete.ObjectGroup;
@@ -55,15 +56,23 @@ public class Game extends Canvas implements Runnable {
         Button exitButton = new Button("Exit", Color.WHITE, 45, (WIDTH - 250) / 2, 625, 250, 75, TEXTURE_LOADER.getTexture("button_pink_long.png"));
         Button playButton = new Button("Play", Color.WHITE, 50, (WIDTH - 250) / 2, 500, 250, 100, TEXTURE_LOADER.getTexture("button_yellow_long.png"));
 
-        exitButton.addAction(() -> running = false);
-        playButton.addAction(() -> {
-            MOUSE_HANDLER.addObject(levelSelectorClickable);
-            MOUSE_HANDLER.removeObject(mainMenuClickable);
-            MOUSE_HANDLER.addObject(pages.get(pageNum));
+        exitButton.addAction(new Action(exitButton) {
+            @Override
+            public void perform() {
+                running = false;
+            }
+        });
+        playButton.addAction(new Action(playButton) {
+            @Override
+            public void perform() {
+                MOUSE_HANDLER.addObject(levelSelectorClickable);
+                MOUSE_HANDLER.removeObject(mainMenuClickable);
+                MOUSE_HANDLER.addObject(pages.get(pageNum));
 
-            OBJECT_HANDLER.removeObject(mainMenuGroup);
-            OBJECT_HANDLER.addObject(levelSelectorGroup);
-            OBJECT_HANDLER.addObject(pages.get(pageNum));
+                OBJECT_HANDLER.removeObject(mainMenuGroup);
+                OBJECT_HANDLER.addObject(levelSelectorGroup);
+                OBJECT_HANDLER.addObject(pages.get(pageNum));
+            }
         });
 
         mainMenuGroup.addObject(mainLogo);
@@ -84,19 +93,22 @@ public class Game extends Canvas implements Runnable {
 
         Grid grid = new Grid(CANDIES_HANDLER);
 
-        backToMenu.addAction(() -> {
-            OBJECT_HANDLER.removeObject(levelSelectorGroup);
-            OBJECT_HANDLER.removeObject(pages.get(pageNum));
-            OBJECT_HANDLER.removeObject(gameSceneGroup);
-            OBJECT_HANDLER.addObject(mainMenuGroup);
+        backToMenu.addAction(new Action(backToMenu) {
+            @Override
+            public void perform() {
+                OBJECT_HANDLER.removeObject(levelSelectorGroup);
+                OBJECT_HANDLER.removeObject(pages.get(pageNum));
+                OBJECT_HANDLER.removeObject(gameSceneGroup);
+                OBJECT_HANDLER.addObject(mainMenuGroup);
 
-            MOUSE_HANDLER.addObject(mainMenuClickable);
-            MOUSE_HANDLER.removeObject(pages.get(pageNum));
-            MOUSE_HANDLER.removeObject(levelSelectorClickable);
-            MOUSE_HANDLER.removeObject(gameSceneClickable);
+                MOUSE_HANDLER.addObject(mainMenuClickable);
+                MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                MOUSE_HANDLER.removeObject(levelSelectorClickable);
+                MOUSE_HANDLER.removeObject(gameSceneClickable);
 
-            CANDIES_HANDLER.setLevel(null);
-            backToMenu.setXY((WIDTH / 2) - 50, 800);
+                CANDIES_HANDLER.setLevel(null);
+                backToMenu.setXY((WIDTH / 2) - 50, 800);
+            }
         });
 
         levelSelectorGroup.addObject(levelPanel);
@@ -126,49 +138,63 @@ public class Game extends Canvas implements Runnable {
                     y = (j + 1 - 25 * i) / 6 + 1;
                 }
                 Button temp = new Button("" + levels.get(j).getNumber(), Color.WHITE, 30, x * (WIDTH / 7) - 50, y * (HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
-                currentLevel = levels.get(j);
-                temp.addAction(() -> {
-                    OBJECT_HANDLER.removeObject(levelSelectorGroup);
-                    OBJECT_HANDLER.addObject(gameSceneGroup);
-                    OBJECT_HANDLER.removeObject(pages.get(pageNum));
+                temp.addAction(new Action(temp) {
+                    @Override
+                    public void perform() {
+                        OBJECT_HANDLER.removeObject(levelSelectorGroup);
+                        OBJECT_HANDLER.addObject(gameSceneGroup);
+                        OBJECT_HANDLER.removeObject(pages.get(pageNum));
 
-                    MOUSE_HANDLER.removeObject(levelSelectorClickable);
-                    MOUSE_HANDLER.removeObject(pages.get(pageNum));
-                    MOUSE_HANDLER.addObject(gameSceneClickable);
+                        MOUSE_HANDLER.removeObject(levelSelectorClickable);
+                        MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                        MOUSE_HANDLER.addObject(gameSceneClickable);
 
-                    backToMenu.setXY(30, 830);
-                    grid.setUpGrid(currentLevel);
-                    CANDIES_HANDLER.setLevel(currentLevel);
+                        backToMenu.setXY(30, 830);
+                        currentLevel = LEVEL_LOADER.getLevels().get(Integer.parseInt(getParent().getString())-1);
+                        grid.setUpGrid(currentLevel);
+                        CANDIES_HANDLER.setLevel(currentLevel);
+                    }
                 });
                 pages.get(i).addObject(temp);
             }
         }
 
-        levelPageLeft.addAction(() -> {
-            if (pageNum > 0) {
-                OBJECT_HANDLER.removeObject(pages.get(pageNum));
-                OBJECT_HANDLER.addObject(pages.get(pageNum - 1));
-                MOUSE_HANDLER.removeObject(pages.get(pageNum));
-                MOUSE_HANDLER.addObject(pages.get(pageNum - 1));
-                pageNum--;
+        levelPageLeft.addAction(new Action(levelPageLeft) {
+            @Override
+            public void perform() {
+                if (pageNum > 0) {
+                    OBJECT_HANDLER.removeObject(pages.get(pageNum));
+                    OBJECT_HANDLER.addObject(pages.get(pageNum - 1));
+                    MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                    MOUSE_HANDLER.addObject(pages.get(pageNum - 1));
+                    pageNum--;
+                }
             }
         });
 
-        levelPageRight.addAction(() -> {
-            if (pageNum < pageCount - 1) {
-                OBJECT_HANDLER.removeObject(pages.get(pageNum));
-                OBJECT_HANDLER.addObject(pages.get(pageNum + 1));
-                MOUSE_HANDLER.removeObject(pages.get(pageNum));
-                MOUSE_HANDLER.addObject(pages.get(pageNum + 1));
-                pageNum++;
+        levelPageRight.addAction(new Action(levelPageRight) {
+            @Override
+            public void perform() {
+                if (pageNum < pageCount - 1) {
+                    OBJECT_HANDLER.removeObject(pages.get(pageNum));
+                    OBJECT_HANDLER.addObject(pages.get(pageNum + 1));
+                    MOUSE_HANDLER.removeObject(pages.get(pageNum));
+                    MOUSE_HANDLER.addObject(pages.get(pageNum + 1));
+                    pageNum++;
+                }
             }
         });
 
 
         // Game action!
         PlainImage gameHud = new PlainImage(TEXTURE_LOADER.getTexture("hud.png"), 0, 0, 300, 800);
-        Text target = new Text("Target: " + currentLevel.getTarget(), "TimesRoman", Color.BLUE, 40, 50, 20, 200, 100);
-        Text move = new Text("Move: ", "TimesRoman", Color.BLUE, 50, 50, 180, 200, 100) {
+        Text target = new Text("TimesRoman", Color.BLUE, 40, 50, 20, 200, 100) {
+            @Override
+            public void tick() {
+                setText("Target: " + currentLevel.getTarget());
+            }
+        };
+        Text move = new Text("TimesRoman", Color.BLUE, 50, 50, 180, 200, 100) {
             @Override
             public void tick() {
                 setText("Move: " + currentLevel.getMove());

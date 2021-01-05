@@ -1,12 +1,10 @@
 package com.candycrush.main.object.abstraction;
 
-import com.candycrush.main.object.interface_.ActionInterface;
-
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public abstract class Clickable extends GameObject {
-    protected ArrayList<ActionInterface> actions = new ArrayList<>();
+    protected ArrayList<Action> actions = new ArrayList<>();
 
     public Clickable(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -20,12 +18,12 @@ public abstract class Clickable extends GameObject {
 
     public abstract void mouseReset();
 
-    public void addAction(ActionInterface actionInterface) {
-        actions.add(actionInterface);
+    public void addAction(Action action) {
+        actions.add(action);
     }
 
     public void performAction() {
-        for (ActionInterface action : actions) {
+        for (Action action : actions) {
             action.perform();
         }
     }
