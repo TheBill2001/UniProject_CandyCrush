@@ -12,6 +12,7 @@ public abstract class GameObject extends GenericObject {
         this.width = width;
         this.height = height;
     }
+
     public int getX() {
         return x;
     }

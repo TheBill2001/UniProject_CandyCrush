@@ -2,6 +2,7 @@ package com.candycrush.main.object.abstraction;
 
 import com.candycrush.main.object.interface_.ActionInterface;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public abstract class Clickable extends GameObject {
@@ -11,11 +12,11 @@ public abstract class Clickable extends GameObject {
         super(x, y, width, height);
     }
 
-    public abstract void mousePressed ();
+    public abstract void mousePressed(MouseEvent e);
 
-    public abstract void mouseReleased();
+    public abstract void mouseReleased(MouseEvent e);
 
-    public abstract void mouseHover();
+    public abstract void mouseHover(MouseEvent e);
 
     public abstract void mouseReset();
 

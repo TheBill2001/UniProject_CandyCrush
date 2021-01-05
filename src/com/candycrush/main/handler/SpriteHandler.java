@@ -31,6 +31,6 @@ public class SpriteHandler {
     }
 
     public static BufferedImage cutSprite(BufferedImage image, int x, int y, int width, int height) {
-        return image.getSubimage(x,y,width,height);
+        return image.getSubimage(x, y, width, height);
     }
 }

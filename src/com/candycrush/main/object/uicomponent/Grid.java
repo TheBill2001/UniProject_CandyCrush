@@ -1,20 +1,24 @@
 package com.candycrush.main.object.uicomponent;
 
+import com.candycrush.main.handler.CandiesHandler;
 import com.candycrush.main.handler.SpriteHandler;
-import com.candycrush.main.object.abstraction.GameObject;
+import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.object.concrete.Level;
 import com.candycrush.main.resourceloader.TextureLoader;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Grid extends GameObject {
+public class Grid extends Clickable {
     private Level level = null;
     private BufferedImage gridTexture = null;
+    private CandiesHandler handler;
 
-    public Grid() {
-        super(350, 30, 900,900);
+    public Grid(CandiesHandler handler) {
+        super(350, 30, 900, 900);
+        this.handler = handler;
     }
 
     public void setUpGrid(Level level) {
@@ -29,6 +33,7 @@ public class Grid extends GameObject {
             return -1;
         return 0;
     }
+
     private int offsetDirY(int dir) {
         if (dir == 0 || dir == 4)
             return -1;
@@ -36,6 +41,7 @@ public class Grid extends GameObject {
             return 1;
         return 0;
     }
+
     private int diagonalOffsetX(int dir) {
         if (dir == 0 || dir == 1)
             return -1;
@@ -51,6 +57,7 @@ public class Grid extends GameObject {
             return 1;
         return 0;
     }
+
     private boolean emptyAdjacent(int x, int y, int side) {
         int dX = offsetDirX(side);
         int dY = offsetDirY(side);
@@ -59,6 +66,7 @@ public class Grid extends GameObject {
         else
             return level.getEmpty()[y + dY][x + dX];
     }
+
     private boolean emptyDiagonal(int x, int y, int side) {
         int dX = diagonalOffsetX(side);
         int dY = diagonalOffsetY(side);
@@ -69,13 +77,13 @@ public class Grid extends GameObject {
     }
 
     private BufferedImage createGridTexture() {
-        BufferedImage texture = new BufferedImage(908,908, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage texture = new BufferedImage(908, 908, BufferedImage.TYPE_4BYTE_ABGR);
         ArrayList<BufferedImage> textures = SpriteHandler.divideSprite(TextureLoader.getInstance().getTexture("grid.png"), 8, 8, 58);
         Graphics2D graphic = texture.createGraphics();
         boolean[][] empty = level.getEmpty();
 
         for (int y = 0; y < 9; y++) {
-            for (int x= 0; x < 9; x++) {
+            for (int x = 0; x < 9; x++) {
                 int even = 0;
                 if ((x + y) % 2 == 1)
                     even = 1;
@@ -97,16 +105,16 @@ public class Grid extends GameObject {
 
                     // Draw conner
                     for (int k = 0; k < 4; k++) {
-                        if (emptyAdjacent(x, y, k) && emptyAdjacent(x, y, k + 1) && emptyDiagonal(x, y,k))
+                        if (emptyAdjacent(x, y, k) && emptyAdjacent(x, y, k + 1) && emptyDiagonal(x, y, k))
                             graphic.drawImage(textures.get(2 * k + even), posX + diagonalOffsetX(k) * 50, posY + diagonalOffsetY(k) * 50, null);
-                        else if (!emptyAdjacent(x, y, k) && emptyAdjacent(x, y, k + 1) && emptyDiagonal(x, y,k))
+                        else if (!emptyAdjacent(x, y, k) && emptyAdjacent(x, y, k + 1) && emptyDiagonal(x, y, k))
                             graphic.drawImage(textures.get(16 + 2 * k + even), posX + diagonalOffsetX(k) * 50, posY + diagonalOffsetY(k) * 50, null);
-                        else if (emptyAdjacent(x, y, k) && !emptyAdjacent(x, y, k + 1) && emptyDiagonal(x, y,k))
+                        else if (emptyAdjacent(x, y, k) && !emptyAdjacent(x, y, k + 1) && emptyDiagonal(x, y, k))
                             graphic.drawImage(textures.get(24 + 2 * k + even), posX + diagonalOffsetX(k) * 50, posY + diagonalOffsetY(k) * 50, null);
                         else
                             graphic.drawImage(textures.get(48 + 2 * k + even), posX + diagonalOffsetX(k) * 50, posY + diagonalOffsetY(k) * 50, null);
                     }
-                } else  {
+                } else {
                     // Draw empty conner
                     for (int k = 0; k < 4; k++) {
                         if (!emptyAdjacent(x, y, k) && !emptyAdjacent(x, y, k + 1))
@@ -123,6 +131,26 @@ public class Grid extends GameObject {
 
     @Override
     public void render(Graphics2D graphic) {
-        graphic.drawImage(gridTexture,346,26, null);
+        graphic.drawImage(gridTexture, 346, 26, null);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        handler.selected(e.getX(), e.getY());
+    }
+
+    @Override
+    public void mouseHover(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReset() {
+
     }
 }

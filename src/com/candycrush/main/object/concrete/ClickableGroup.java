@@ -3,13 +3,14 @@ package com.candycrush.main.object.concrete;
 import com.candycrush.main.object.abstraction.Clickable;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class ClickableGroup extends Clickable {
     private final ArrayList<Clickable> objects = new ArrayList<>();
 
     public ClickableGroup() {
-        super(0,0,0,0);
+        super(0, 0, 0, 0);
     }
 
     public void addObject(Clickable object) {
@@ -39,23 +40,23 @@ public class ClickableGroup extends Clickable {
     }
 
     @Override
-    public void mousePressed() {
+    public void mousePressed(MouseEvent e) {
         for (Clickable object : objects) {
-            object.mousePressed();
+            object.mousePressed(e);
         }
     }
 
     @Override
-    public void mouseReleased() {
+    public void mouseReleased(MouseEvent e) {
         for (Clickable object : objects) {
-            object.mouseReleased();
+            object.mouseReleased(e);
         }
     }
 
     @Override
-    public void mouseHover() {
+    public void mouseHover(MouseEvent e) {
         for (Clickable object : objects) {
-            object.mouseHover();
+            object.mouseHover(e);
         }
     }
 

@@ -8,22 +8,28 @@ import java.awt.*;
 
 public class Candy extends GameObject implements Comparable<Candy> {
     private final CandiesID id;
-    private int dX;
-    private int dY;
-    private boolean moving = false;
     private final CandiesHandler handler;
+    private int destX;
+    private int destY;
+    private int animX;
+    private int animY;
+    private boolean moving = false;
 
     public Candy(int x, int y, CandiesID id, CandiesHandler handler) {
         super(x, y, 100, 100);
         this.id = id;
-        dX = x;
-        dY = y;
+        destX = x;
+        destY = y;
+        animX = x;
+        animY = y;
         this.handler = handler;
     }
 
     public void gotoXY(int x, int y) {
-        dX = x;
-        dY = y;
+        this.x = x;
+        this.y = y;
+        destX = x;
+        destY = y;
         moving = true;
     }
 
@@ -33,26 +39,27 @@ public class Candy extends GameObject implements Comparable<Candy> {
 
     @Override
     public void tick() {
-        if (x != dX) {
-            if (x > dX)
-                x -= 10;
+        if (animX != destX) {
+            if (animX > destX)
+                animX -= 1;
             else
-                x += 10;
+                animX += 1;
         }
-        if (y != dY) {
-            if (y > dY)
-                y -= 10;
+        if (animY != destY) {
+            if (animY > destY)
+                animY -= 1;
             else
-                y += 10;
+                animY += 1;
         }
-        if (x == dX && y == dY)
+        if (animX == destX && animY == destY)
             moving = false;
     }
 
     @Override
     public void render(Graphics2D graphic) {
-        if (handler.getGrid()[(y+70)/100][(x - 350)/100] != 3 && (y+70)/100 != 0)
-            graphic.drawImage(id.Texture,x,y,width,height,null);
+        int[][] gridData = handler.getGrid();
+        if (gridData[(animY + 70) / 100][(animX - 350) / 100] != 2 && (animY + 70) / 100 != 0)
+            graphic.drawImage(id.Texture, animX, animY, width, height, null);
     }
 
 

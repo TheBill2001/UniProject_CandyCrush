@@ -4,6 +4,7 @@ import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.handler.SpriteHandler;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -28,17 +29,17 @@ public class Button extends Clickable {
     }
 
     @Override
-    public void mousePressed() {
+    public void mousePressed(MouseEvent e) {
         state = 2;
     }
 
     @Override
-    public void mouseReleased() {
+    public void mouseReleased(MouseEvent e) {
         state = 0;
     }
 
     @Override
-    public void mouseHover() {
+    public void mouseHover(MouseEvent e) {
         state = 1;
     }
 

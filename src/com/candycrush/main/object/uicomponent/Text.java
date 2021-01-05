@@ -42,6 +42,6 @@ public class Text extends GameObject {
         int strX = x + (width - fontMetrics.stringWidth(text)) / 2;
         int strY = y + (height - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent();
         graphic.setFont(ft);
-        graphic.drawString(text,strX,strY);
+        graphic.drawString(text, strX, strY);
     }
 }
