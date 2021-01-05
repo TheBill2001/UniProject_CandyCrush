@@ -1,6 +1,6 @@
 package com.candycrush.main;
 
-import com.candycrush.main.handler.CandiesHandler;
+import com.candycrush.main.handler.LevelHandler;
 import com.candycrush.main.handler.MouseHandler;
 import com.candycrush.main.handler.ObjectHandler;
 import com.candycrush.main.object.abstraction.Action;
@@ -27,7 +27,7 @@ public class Game extends Canvas implements Runnable {
     private static final TextureLoader TEXTURE_LOADER = TextureLoader.getInstance();
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
     private static final LevelLoader LEVEL_LOADER = LevelLoader.getInstance();
-    private static final CandiesHandler CANDIES_HANDLER = CandiesHandler.getInstance();
+    private static final LevelHandler CANDIES_HANDLER = LevelHandler.getInstance();
     private static int fps = 0;
     private static Thread thread;
     private static boolean running = false;
@@ -108,6 +108,7 @@ public class Game extends Canvas implements Runnable {
 
                 CANDIES_HANDLER.setLevel(null);
                 backToMenu.setXY((WIDTH / 2) - 50, 800);
+                currentLevel.reset();
             }
         });
 

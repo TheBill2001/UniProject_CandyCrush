@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class CandiesHandler {
-    private static CandiesHandler candiesHandler = null;
+public class LevelHandler {
+    private static LevelHandler levelHandler = null;
     private final ObjectGroup candiesGroup = new ObjectGroup();
     private final ArrayList<Candy> candies = new ArrayList<>();
     private final ArrayList<Candy> moving = new ArrayList<>();
@@ -27,11 +27,11 @@ public class CandiesHandler {
     private int oldSelX = 0;
     private int oldSelY = 0;
 
-    public static CandiesHandler getInstance() {
-        if (candiesHandler == null) {
-            candiesHandler = new CandiesHandler();
+    public static LevelHandler getInstance() {
+        if (levelHandler == null) {
+            levelHandler = new LevelHandler();
         }
-        return candiesHandler;
+        return levelHandler;
     }
 
     public void setLevel(Level level) {
@@ -254,10 +254,13 @@ public class CandiesHandler {
             for (Candy candy : candies) {
                 matches.addAll(checkMatches(candy));
             }
+            level.addScore(matches.size()*40);
             candies.removeAll(matches);
 
             // If the moved candies have not been deleted (matched), move them back.
-            moving.removeAll(matches);
+            if (moving.removeAll(matches))
+                level.removeMove(1);
+
             if (moving.size() == 2) {
                 Candy.swap(moving.get(0), moving.get(1));
 

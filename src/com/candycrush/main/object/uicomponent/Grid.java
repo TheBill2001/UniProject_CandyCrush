@@ -1,6 +1,6 @@
 package com.candycrush.main.object.uicomponent;
 
-import com.candycrush.main.handler.CandiesHandler;
+import com.candycrush.main.handler.LevelHandler;
 import com.candycrush.main.handler.SpriteHandler;
 import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.object.concrete.Level;
@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class Grid extends Clickable {
     private Level level = null;
     private BufferedImage gridTexture = null;
-    private CandiesHandler handler;
+    private LevelHandler handler;
 
-    public Grid(CandiesHandler handler) {
+    public Grid(LevelHandler handler) {
         super(350, 30, 900, 900);
         this.handler = handler;
     }

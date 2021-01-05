@@ -33,7 +33,7 @@ public class TextureLoader {
     }
 
     private void loadTexture() {
-        String path = "res/texture";
+        String path = "src/com/candycrush/main/res/texture";
         BufferedImage image = null;
         String name;
         File folder = new File(path);

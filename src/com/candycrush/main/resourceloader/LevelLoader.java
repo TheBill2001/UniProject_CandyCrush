@@ -27,7 +27,7 @@ public class LevelLoader {
     }
 
     private void loadLevelConfig() {
-        String path = "res/level";
+        String path = "src/com/candycrush/main/res/level";
         Properties properties;
         File folder = new File(path);
         File[] fileList = folder.listFiles();

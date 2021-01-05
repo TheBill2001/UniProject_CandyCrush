@@ -1,18 +1,18 @@
 package com.candycrush.main.object.concrete;
 
 import com.candycrush.main.CandiesID;
-import com.candycrush.main.handler.CandiesHandler;
+import com.candycrush.main.handler.LevelHandler;
 import com.candycrush.main.object.abstraction.GameObject;
 
 import java.awt.*;
 
 public class Candy extends GameObject {
     private final CandiesID id;
-    private final CandiesHandler handler;
+    private final LevelHandler handler;
     private int animX;
     private int animY;
 
-    public Candy(int x, int y, CandiesID id, CandiesHandler handler) {
+    public Candy(int x, int y, CandiesID id, LevelHandler handler) {
         super(x, y, 100, 100);
         this.id = id;
         animX = x;
