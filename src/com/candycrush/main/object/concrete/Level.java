@@ -24,6 +24,9 @@ public class Level implements Comparable<Level> {
     }
 
     private void setEmpty(String string) {
+        if (string.isEmpty())
+            return;
+
         String[] emptyCell = string.split(",");
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
