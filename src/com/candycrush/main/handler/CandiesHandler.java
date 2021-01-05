@@ -60,9 +60,9 @@ public class CandiesHandler {
     }
 
     public void selected(int x, int y) {
-        if (grid[(y+70)/100][(x-350)/100] != 2) {
-            selX = ((x-350) / 100) * 100 + 350;
-            selY = ((y-30) / 100) * 100 +30;
+        if (grid[(y + 70) / 100][(x - 350) / 100] != 2) {
+            selX = ((x - 350) / 100) * 100 + 350;
+            selY = ((y - 30) / 100) * 100 + 30;
         }
     }
 
@@ -116,7 +116,7 @@ public class CandiesHandler {
 
     private ArrayList<Candy> checkVerticalUp(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX(), candy.getY()-100);
+        Candy c1 = findCandy(candy.getX(), candy.getY() - 100);
         if (c1 != null && c1.getId() == candy.getId()) {
             matches.addAll(checkVerticalUp(c1));
             matches.add(c1);
@@ -127,7 +127,7 @@ public class CandiesHandler {
 
     private ArrayList<Candy> checkVerticalDown(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX(), candy.getY()+100);
+        Candy c1 = findCandy(candy.getX(), candy.getY() + 100);
         if (c1 != null && c1.getId() == candy.getId()) {
             matches.addAll(checkVerticalDown(c1));
             matches.add(c1);
@@ -146,7 +146,7 @@ public class CandiesHandler {
 
     private ArrayList<Candy> checkHorizontalRight(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX()+100, candy.getY());
+        Candy c1 = findCandy(candy.getX() + 100, candy.getY());
         if (c1 != null && c1.getId() == candy.getId()) {
             matches.addAll(checkHorizontalRight(c1));
             matches.add(c1);
@@ -157,7 +157,7 @@ public class CandiesHandler {
 
     private ArrayList<Candy> checkHorizontalLeft(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX()-100, candy.getY());
+        Candy c1 = findCandy(candy.getX() - 100, candy.getY());
         if (c1 != null && c1.getId() == candy.getId()) {
             matches.addAll(checkHorizontalLeft(c1));
             matches.add(c1);
@@ -231,10 +231,10 @@ public class CandiesHandler {
         }
 
         // Check after moving two candies.
-        if (oldSelX != selX || oldSelY != selY)  {
+        if (oldSelX != selX || oldSelY != selY) {
             if ((Math.abs(oldSelX - selX) == 100 && Math.abs(oldSelY - selY) == 0) || (Math.abs(oldSelX - selX) == 0 && Math.abs(oldSelY - selY) == 100)) {
-                Candy c1 = findCandy(oldSelX,oldSelY);
-                Candy c2 = findCandy(selX,selY);
+                Candy c1 = findCandy(oldSelX, oldSelY);
+                Candy c2 = findCandy(selX, selY);
 
                 if (c1 != null && c2 != null) {
                     Candy.swap(c1, c2);
@@ -257,6 +257,7 @@ public class CandiesHandler {
             candies.removeAll(matches);
 
             // If the moved candies have not been deleted (matched), move them back.
+            moving.removeAll(matches);
             if (moving.size() == 2) {
                 Candy.swap(moving.get(0), moving.get(1));
 
@@ -269,7 +270,7 @@ public class CandiesHandler {
 
     public void render(Graphics2D graphic) {
         if (level == null || selY == 0 || selX == 0)
-            return ;
+            return;
 
         BufferedImage selector = SpriteHandler.cutSprite(TextureLoader.getInstance().getTexture("candies.png"), 274, 1569, 160, 160);
         graphic.drawImage(selector, selX, selY, 100, 100, null);
