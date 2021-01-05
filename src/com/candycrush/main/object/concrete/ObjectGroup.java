@@ -16,6 +16,10 @@ public class ObjectGroup extends GenericObject {
         objects.remove(object);
     }
 
+    public void clear() {
+        objects.clear();
+    }
+
     public ArrayList<GenericObject> getObjects() {
         return objects;
     }

@@ -6,7 +6,7 @@ import com.candycrush.main.object.abstraction.GameObject;
 
 import java.awt.*;
 
-public class Candy extends GameObject implements Comparable<Candy> {
+public class Candy extends GameObject /*implements Comparable<Candy>*/ {
     private final CandiesID id;
     private final CandiesHandler handler;
     private int destX;
@@ -37,19 +37,23 @@ public class Candy extends GameObject implements Comparable<Candy> {
         return moving;
     }
 
+    public CandiesID getId() {
+        return id;
+    }
+
     @Override
     public void tick() {
         if (animX != destX) {
             if (animX > destX)
-                animX -= 1;
+                animX -= 10;
             else
-                animX += 1;
+                animX += 10;
         }
         if (animY != destY) {
             if (animY > destY)
-                animY -= 1;
+                animY -= 10;
             else
-                animY += 1;
+                animY += 10;
         }
         if (animX == destX && animY == destY)
             moving = false;
@@ -63,16 +67,16 @@ public class Candy extends GameObject implements Comparable<Candy> {
     }
 
 
-    @Override
+/*    @Override
     public int compareTo(Candy candy) {
         if (x < candy.x) {
             if (y > candy.y)
                 return -1;
-            else
+            else if (y < candy.y)
                 return 1;
         } else if (x > candy.x) {
             return 1;
         }
         return 0;
-    }
+    }*/
 }

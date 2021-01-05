@@ -1,11 +1,9 @@
 package com.candycrush.main.object.uicomponent;
 
 import com.candycrush.main.Game;
-import com.candycrush.main.handler.MouseHandler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 
 public class Window extends JFrame {
     public Window(int width, int height, String title, Game game) {

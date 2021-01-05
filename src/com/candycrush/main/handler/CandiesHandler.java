@@ -44,7 +44,7 @@ public class CandiesHandler {
 
         grid = new int[10][9];
         candies.clear();
-        candiesGroup.getObjects().clear();
+        candiesGroup.clear();
         random = new Random();
 
         for (int y = 1; y < 10; y++) {
@@ -72,17 +72,23 @@ public class CandiesHandler {
         return candiesGroup;
     }
 
+    private void updateCandiesGroup() {
+        candiesGroup.clear();
+        for (Candy candy : candies) {
+            candiesGroup.addObject(candy);
+        }
+    }
+
     private void spawnCandies() {
         CandiesID[] candiesID = CandiesID.values();
         for (int x = 0; x < 9; x++) {
             if (grid[0][x] == 0) {
                 Candy temp = new Candy(x * 100 + 350, -70, candiesID[random.nextInt(candiesID.length)], this);
                 candies.add(temp);
-                candiesGroup.addObject(temp);
                 grid[0][x] = 1;
             }
         }
-        Collections.sort(candies);
+        //Collections.sort(candies);
     }
 
     private void updateGrid() {
@@ -107,13 +113,83 @@ public class CandiesHandler {
         return null;
     }
 
+    private ArrayList<Candy> checkVerticalLeft(Candy candy) {
+        ArrayList<Candy> matches = new ArrayList<>();
+        Candy c1 = findCandy(candy.getX()-100, candy.getY());
+        if (c1 != null && c1.getId() == candy.getId()) {
+            matches.addAll(checkVerticalLeft(c1));
+            matches.add(c1);
+        }
+
+        return matches;
+    }
+
+    private ArrayList<Candy> checkVerticalRight(Candy candy) {
+        ArrayList<Candy> matches = new ArrayList<>();
+        Candy c1 = findCandy(candy.getX()+100, candy.getY());
+        if (c1 != null && c1.getId() == candy.getId()) {
+            matches.addAll(checkVerticalRight(c1));
+            matches.add(c1);
+        }
+
+        return matches;
+    }
+
+    private ArrayList<Candy> checkVertical(Candy candy) {
+        ArrayList<Candy> matches = new ArrayList<>();
+        matches.addAll(checkVerticalRight(candy));
+        matches.addAll(checkVerticalLeft(candy));
+        matches.add(candy);
+        return matches;
+    }
+
+    private ArrayList<Candy> checkHorizontalUp(Candy candy) {
+        ArrayList<Candy> matches = new ArrayList<>();
+        Candy c1 = findCandy(candy.getX(), candy.getY()+100);
+        if (c1 != null && c1.getId() == candy.getId()) {
+            matches.addAll(checkHorizontalUp(c1));
+            matches.add(c1);
+        }
+
+        return matches;
+    }
+
+    private ArrayList<Candy> checkHorizontalDown(Candy candy) {
+        ArrayList<Candy> matches = new ArrayList<>();
+        Candy c1 = findCandy(candy.getX(), candy.getY()-100);
+        if (c1 != null && c1.getId() == candy.getId()) {
+            matches.addAll(checkHorizontalDown(c1));
+            matches.add(c1);
+        }
+
+        return matches;
+    }
+
+    private ArrayList<Candy> checkHorizontal(Candy candy) {
+        ArrayList<Candy> matches = new ArrayList<>();
+        matches.addAll(checkHorizontalUp(candy));
+        matches.addAll(checkHorizontalDown(candy));
+        matches.add(candy);
+        return matches;
+    }
+
+    private boolean check(Candy candy) {
+        if (checkHorizontal(candy).size() == 3) {
+            candies.removeAll(checkHorizontal(candy));
+        } else if (checkVertical(candy).size() == 3) {
+            candies.removeAll(checkVertical(candy));
+        } else
+            return false;
+        return true;
+    }
+
     public void tick() {
         if (level == null)
             return;
 
         spawnCandies();
-        for (Candy candy : candies) {
-            // Falling
+        for (int i = 0; i < candies.size(); i++) {
+            Candy candy = candies.get(i);
             int y = (candy.getY() + 70) / 100;
             int x = (candy.getX() - 350) / 100;
             while (y <= 8) {
@@ -140,6 +216,9 @@ public class CandiesHandler {
                 candy.gotoXY(x * 100 + 350, y * 100 - 70);
             }
 
+            if (check(candy))
+                i = 0;
+
             updateGrid();
         }
 
@@ -148,24 +227,27 @@ public class CandiesHandler {
             Candy c2 = findCandy(selX,selY);
 
             if (c1 != null && c2 != null) {
-                c1.gotoXY(selX,selY);
-                c2.gotoXY(oldSelX,oldSelY);
+                if ((Math.abs(oldSelX - selX) == 100 && Math.abs(oldSelY - selY) == 0) || (Math.abs(oldSelX - selX) == 0 && Math.abs(oldSelY - selY) == 100)) {
+                    c1.gotoXY(selX, selY);
+                    c2.gotoXY(oldSelX, oldSelY);
+
+                    if (!check(c1) && !check(c2)) {
+                        c1.gotoXY(oldSelX, oldSelY);
+                        c2.gotoXY(selX, selY);
+                    }
+                }
             }
 
             oldSelX = selX;
             oldSelY = selY;
         }
 
+        updateCandiesGroup();
     }
 
     public void render(Graphics2D graphic) {
         if (level == null || selY == 0 || selX == 0)
             return ;
-
-/*        int drawX, drawY;
-
-        drawX = ((selX-350) / 100) * 100 + 350;
-        drawY = ((selY-30) / 100) * 100 +30;*/
 
         BufferedImage selector = SpriteHandler.cutSprite(TextureLoader.getInstance().getTexture("candies.png"), 274, 1569, 160, 160);
         graphic.drawImage(selector, selX, selY, 100, 100, null);
