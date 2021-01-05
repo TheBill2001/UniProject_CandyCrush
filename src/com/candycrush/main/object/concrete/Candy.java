@@ -6,20 +6,15 @@ import com.candycrush.main.object.abstraction.GameObject;
 
 import java.awt.*;
 
-public class Candy extends GameObject /*implements Comparable<Candy>*/ {
+public class Candy extends GameObject {
     private final CandiesID id;
     private final CandiesHandler handler;
-    private int destX;
-    private int destY;
     private int animX;
     private int animY;
-    private boolean moving = false;
 
     public Candy(int x, int y, CandiesID id, CandiesHandler handler) {
         super(x, y, 100, 100);
         this.id = id;
-        destX = x;
-        destY = y;
         animX = x;
         animY = y;
         this.handler = handler;
@@ -28,35 +23,40 @@ public class Candy extends GameObject /*implements Comparable<Candy>*/ {
     public void gotoXY(int x, int y) {
         this.x = x;
         this.y = y;
-        destX = x;
-        destY = y;
-        moving = true;
     }
 
     public boolean isMoving() {
-        return moving;
+        return !(animX == x && animY == y);
     }
 
     public CandiesID getId() {
         return id;
     }
 
+    public static void swap(Candy c1, Candy c2) {
+        int x1 = c1.getX();
+        int y1 = c1.getY();
+        int x2 = c2.getX();
+        int y2 = c2.getY();
+
+        c1.gotoXY(x2,y2);
+        c2.gotoXY(x1,y1);
+    }
+
     @Override
     public void tick() {
-        if (animX != destX) {
-            if (animX > destX)
+        if (animX != x) {
+            if (animX > x)
                 animX -= 10;
             else
                 animX += 10;
         }
-        if (animY != destY) {
-            if (animY > destY)
+        if (animY != y) {
+            if (animY > y)
                 animY -= 10;
             else
                 animY += 10;
         }
-        if (animX == destX && animY == destY)
-            moving = false;
     }
 
     @Override
@@ -65,18 +65,4 @@ public class Candy extends GameObject /*implements Comparable<Candy>*/ {
         if (gridData[(animY + 70) / 100][(animX - 350) / 100] != 2 && (animY + 70) / 100 != 0)
             graphic.drawImage(id.Texture, animX, animY, width, height, null);
     }
-
-
-/*    @Override
-    public int compareTo(Candy candy) {
-        if (x < candy.x) {
-            if (y > candy.y)
-                return -1;
-            else if (y < candy.y)
-                return 1;
-        } else if (x > candy.x) {
-            return 1;
-        }
-        return 0;
-    }*/
 }

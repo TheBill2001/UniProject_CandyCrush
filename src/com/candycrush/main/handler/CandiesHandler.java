@@ -9,13 +9,15 @@ import com.candycrush.main.resourceloader.TextureLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class CandiesHandler {
     private static CandiesHandler candiesHandler = null;
     private final ObjectGroup candiesGroup = new ObjectGroup();
     private final ArrayList<Candy> candies = new ArrayList<>();
+    private final ArrayList<Candy> moving = new ArrayList<>();
     private Level level = null;
     private int[][] grid = new int[10][9];
     private Random random;
@@ -88,7 +90,6 @@ public class CandiesHandler {
                 grid[0][x] = 1;
             }
         }
-        //Collections.sort(candies);
     }
 
     private void updateGrid() {
@@ -113,22 +114,22 @@ public class CandiesHandler {
         return null;
     }
 
-    private ArrayList<Candy> checkVerticalLeft(Candy candy) {
+    private ArrayList<Candy> checkVerticalUp(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX()-100, candy.getY());
+        Candy c1 = findCandy(candy.getX(), candy.getY()-100);
         if (c1 != null && c1.getId() == candy.getId()) {
-            matches.addAll(checkVerticalLeft(c1));
+            matches.addAll(checkVerticalUp(c1));
             matches.add(c1);
         }
 
         return matches;
     }
 
-    private ArrayList<Candy> checkVerticalRight(Candy candy) {
+    private ArrayList<Candy> checkVerticalDown(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX()+100, candy.getY());
+        Candy c1 = findCandy(candy.getX(), candy.getY()+100);
         if (c1 != null && c1.getId() == candy.getId()) {
-            matches.addAll(checkVerticalRight(c1));
+            matches.addAll(checkVerticalDown(c1));
             matches.add(c1);
         }
 
@@ -137,28 +138,28 @@ public class CandiesHandler {
 
     private ArrayList<Candy> checkVertical(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        matches.addAll(checkVerticalRight(candy));
-        matches.addAll(checkVerticalLeft(candy));
+        matches.addAll(checkVerticalUp(candy));
+        matches.addAll(checkVerticalDown(candy));
         matches.add(candy);
         return matches;
     }
 
-    private ArrayList<Candy> checkHorizontalUp(Candy candy) {
+    private ArrayList<Candy> checkHorizontalRight(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX(), candy.getY()+100);
+        Candy c1 = findCandy(candy.getX()+100, candy.getY());
         if (c1 != null && c1.getId() == candy.getId()) {
-            matches.addAll(checkHorizontalUp(c1));
+            matches.addAll(checkHorizontalRight(c1));
             matches.add(c1);
         }
 
         return matches;
     }
 
-    private ArrayList<Candy> checkHorizontalDown(Candy candy) {
+    private ArrayList<Candy> checkHorizontalLeft(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        Candy c1 = findCandy(candy.getX(), candy.getY()-100);
+        Candy c1 = findCandy(candy.getX()-100, candy.getY());
         if (c1 != null && c1.getId() == candy.getId()) {
-            matches.addAll(checkHorizontalDown(c1));
+            matches.addAll(checkHorizontalLeft(c1));
             matches.add(c1);
         }
 
@@ -167,29 +168,41 @@ public class CandiesHandler {
 
     private ArrayList<Candy> checkHorizontal(Candy candy) {
         ArrayList<Candy> matches = new ArrayList<>();
-        matches.addAll(checkHorizontalUp(candy));
-        matches.addAll(checkHorizontalDown(candy));
+        matches.addAll(checkHorizontalLeft(candy));
+        matches.addAll(checkHorizontalRight(candy));
         matches.add(candy);
         return matches;
     }
 
-    private boolean check(Candy candy) {
-        if (checkHorizontal(candy).size() == 3) {
-            candies.removeAll(checkHorizontal(candy));
-        } else if (checkVertical(candy).size() == 3) {
-            candies.removeAll(checkVertical(candy));
-        } else
-            return false;
-        return true;
+    private Set<Candy> checkMatches(Candy candy) {
+        ArrayList<Candy> matches1 = checkHorizontal(candy);
+        ArrayList<Candy> matches2 = checkVertical(candy);
+        Set<Candy> matches = new HashSet<>();
+
+        if (matches1.size() >= 3 || matches2.size() >= 3) {
+            matches.addAll(matches1);
+            matches.addAll(matches2);
+        }
+        return matches;
+    }
+
+    public boolean isMoving() {
+        for (Candy candy : candies) {
+            if (candy.isMoving())
+                return true;
+        }
+        return false;
     }
 
     public void tick() {
+        // Don't do anything if level is not assigned.
         if (level == null)
             return;
 
         spawnCandies();
-        for (int i = 0; i < candies.size(); i++) {
-            Candy candy = candies.get(i);
+
+        // Candies falling
+        for (Candy candy : candies) {
             int y = (candy.getY() + 70) / 100;
             int x = (candy.getX() - 350) / 100;
             while (y <= 8) {
@@ -212,34 +225,43 @@ public class CandiesHandler {
                 }
             }
 
-            if (!candy.isMoving()) {
-                candy.gotoXY(x * 100 + 350, y * 100 - 70);
-            }
-
-            if (check(candy))
-                i = 0;
+            candy.gotoXY(x * 100 + 350, y * 100 - 70);
 
             updateGrid();
         }
 
+        // Check after moving two candies.
         if (oldSelX != selX || oldSelY != selY)  {
-            Candy c1 = findCandy(oldSelX,oldSelY);
-            Candy c2 = findCandy(selX,selY);
+            if ((Math.abs(oldSelX - selX) == 100 && Math.abs(oldSelY - selY) == 0) || (Math.abs(oldSelX - selX) == 0 && Math.abs(oldSelY - selY) == 100)) {
+                Candy c1 = findCandy(oldSelX,oldSelY);
+                Candy c2 = findCandy(selX,selY);
 
-            if (c1 != null && c2 != null) {
-                if ((Math.abs(oldSelX - selX) == 100 && Math.abs(oldSelY - selY) == 0) || (Math.abs(oldSelX - selX) == 0 && Math.abs(oldSelY - selY) == 100)) {
-                    c1.gotoXY(selX, selY);
-                    c2.gotoXY(oldSelX, oldSelY);
-
-                    if (!check(c1) && !check(c2)) {
-                        c1.gotoXY(oldSelX, oldSelY);
-                        c2.gotoXY(selX, selY);
-                    }
+                if (c1 != null && c2 != null) {
+                    Candy.swap(c1, c2);
+                    moving.clear();
+                    moving.add(c1);
+                    moving.add(c2);
                 }
             }
 
             oldSelX = selX;
             oldSelY = selY;
+        }
+
+        // Check after every candies was moved
+        if (!isMoving()) {
+            Set<Candy> matches = new HashSet<>();
+            for (Candy candy : candies) {
+                matches.addAll(checkMatches(candy));
+            }
+            candies.removeAll(matches);
+
+            // If the moved candies have not been deleted (matched), move them back.
+            if (moving.size() == 2) {
+                Candy.swap(moving.get(0), moving.get(1));
+
+                moving.clear();
+            }
         }
 
         updateCandiesGroup();
