@@ -125,7 +125,7 @@ public class Game extends Canvas implements Runnable {
                     x = (j + 1) % 6;
                     y = (j + 1 - 25 * i) / 6 + 1;
                 }
-                Button temp = new Button(levels.get(j).getName(), Color.WHITE, 30, x * (WIDTH / 7) - 50, y * (HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
+                Button temp = new Button("" + levels.get(j).getNumber(), Color.WHITE, 30, x * (WIDTH / 7) - 50, y * (HEIGHT / 6) - 50, 100, 100, TEXTURE_LOADER.getTexture("square_button.png"));
                 currentLevel = levels.get(j);
                 temp.addAction(() -> {
                     OBJECT_HANDLER.removeObject(levelSelectorGroup);

@@ -3,18 +3,14 @@ package com.candycrush.main.object.concrete;
 import java.util.Properties;
 
 public class Level implements Comparable<Level> {
-    private String name;
-    private int move = 0;
+    private int num;
+    private int move;
     private int[] targets = new int[3];
     private int score = 0;
     private final boolean[][] empty = new boolean[9][9];
 
-    public Level(Properties properties) {
-        setProperties(properties);
-    }
-
-    public void setProperties(Properties properties) {
-        this.name = properties.getProperty("name");
+    public Level(Properties properties, int num) {
+        this.num = num;
         this.move = Integer.parseInt(properties.getProperty("move"));
         String[] temp = properties.getProperty("target").split(",");
         for (int i = 0; i < 3; i++) {
@@ -40,8 +36,8 @@ public class Level implements Comparable<Level> {
         }
     }
 
-    public String getName() {
-        return name;
+    public int getNumber() {
+        return num;
     }
 
     public boolean[][] getEmpty() {
@@ -62,6 +58,6 @@ public class Level implements Comparable<Level> {
 
     @Override
     public int compareTo(Level level) {
-        return Integer.parseInt(name) - Integer.parseInt(level.getName());
+        return num -level.getNumber();
     }
 }

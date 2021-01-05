@@ -12,7 +12,6 @@ import java.util.Properties;
 public class LevelLoader {
     private static final ArrayList<Level> levels = new ArrayList<>();
     private static LevelLoader levelLoader = null;
-    private static int total = 0;
 
     private LevelLoader() {
         System.out.println("Start loading level configs!");
@@ -41,8 +40,7 @@ public class LevelLoader {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                levels.add(new Level(properties));
-                total++;
+                levels.add(new Level(properties, Integer.parseInt(file.getName().substring(0,file.getName().indexOf(".")))));
             }
         } else {
             System.out.println("Level folder not found!");
@@ -56,6 +54,6 @@ public class LevelLoader {
     }
 
     public int getNumberOfLevel() {
-        return total;
+        return levels.size();
     }
 }
