@@ -4,6 +4,7 @@ import com.candycrush.main.object.concrete.Level;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +49,29 @@ public class LevelManager {
 
         Collections.sort(levels);
         levels.get(0).setLock(false);
+    }
+
+    public void save() {
+        String path = "src/com/candycrush/main/res/level";
+        Properties properties;
+        File folder = new File(path);
+        File[] fileList = folder.listFiles();
+
+        if (fileList != null) {
+            for (File file : fileList) {
+                properties = new Properties();
+                try {
+                    properties.load(new FileInputStream(file));
+                    String fileName = file.getName().substring(0,file.getName().indexOf("."));
+                    properties.setProperty("lock", "" + levels.get(Integer.parseInt(fileName)-1).isLock());
+                    properties.store(new FileOutputStream(file), null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            System.out.println("Level folder not found!");
+        }
     }
 
     public ArrayList<Level> getLevels() {

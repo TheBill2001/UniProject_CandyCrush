@@ -9,7 +9,7 @@ public class Level implements Comparable<Level> {
     private final int target;
     private int score = 0;
     private final boolean[][] empty = new boolean[9][9];
-    private boolean lock = true;
+    private boolean lock;
     private boolean win = false;
     private boolean loose = false;
 
@@ -17,6 +17,7 @@ public class Level implements Comparable<Level> {
         this.num = num;
         this.move = Integer.parseInt(properties.getProperty("move"));
         this.moveD = this.move;
+        this.lock = Boolean.parseBoolean(properties.getProperty("lock"));
         target = Integer.parseInt(properties.getProperty("target"));
 
         setEmpty(properties.getProperty("empty"));
@@ -42,7 +43,7 @@ public class Level implements Comparable<Level> {
     public void reset() {
         move = moveD;
         score = 0;
-        win  = false;
+        win = false;
         loose = false;
     }
 
@@ -100,6 +101,6 @@ public class Level implements Comparable<Level> {
 
     @Override
     public int compareTo(Level level) {
-        return num -level.getNumber();
+        return num - level.getNumber();
     }
 }

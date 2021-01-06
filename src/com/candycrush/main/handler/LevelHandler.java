@@ -86,7 +86,7 @@ public class LevelHandler {
         CandiesID[] candiesID = CandiesID.values();
         for (int x = 0; x < 9; x++) {
             if (grid[0][x] == 0) {
-                Candy temp = new Candy(x * 100 + 350, -70, candiesID[random.nextInt(candiesID.length)], this);
+                Candy temp = new Candy(x * 100 + 350, -70, candiesID[random.nextInt(candiesID.length)]);
                 candies.add(temp);
                 grid[0][x] = 1;
             }
@@ -259,7 +259,7 @@ public class LevelHandler {
             for (Candy candy : candies) {
                 matches.addAll(checkMatches(candy));
             }
-            level.addScore(matches.size()*40);
+            level.addScore(matches.size() * 40);
             candies.removeAll(matches);
 
             // If the moved candies have not been deleted (matched), move them back.
@@ -283,8 +283,8 @@ public class LevelHandler {
 
                 // Unlock next level
                 int temp = LevelManager.getInstance().getLevels().indexOf(level);
-                if (temp < LevelManager.getInstance().getNumberOfLevel()-1)
-                    LevelManager.getInstance().getLevels().get(temp+1).setLock(false);
+                if (temp < LevelManager.getInstance().getNumberOfLevel() - 1)
+                    LevelManager.getInstance().getLevels().get(temp + 1).setLock(false);
 
                 level.setWin(true);
             }

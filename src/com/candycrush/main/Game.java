@@ -26,7 +26,7 @@ public class Game extends Canvas implements Runnable {
     private static final ObjectHandler OBJECT_HANDLER = ObjectHandler.getInstance();
     private static final TextureManager TEXTURE_LOADER = TextureManager.getInstance();
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
-    private static final LevelManager LEVEL_LOADER = LevelManager.getInstance();
+    private static final LevelManager LEVEL_MANAGER = LevelManager.getInstance();
     private static final LevelHandler LEVEL_HANDLER = LevelHandler.getInstance();
     private static int fps = 0;
     private static Thread thread;
@@ -116,16 +116,16 @@ public class Game extends Canvas implements Runnable {
         levelSelectorClickable.addObject(backToMenu);
 
         int pageCount;
-        if (LEVEL_LOADER.getNumberOfLevel() % 24 != 0)
-            pageCount = (LEVEL_LOADER.getNumberOfLevel() / 24) + 1;
+        if (LEVEL_MANAGER.getNumberOfLevel() % 24 != 0)
+            pageCount = (LEVEL_MANAGER.getNumberOfLevel() / 24) + 1;
         else
-            pageCount = LEVEL_LOADER.getNumberOfLevel() / 24;
+            pageCount = LEVEL_MANAGER.getNumberOfLevel() / 24;
 
         for (int i = 0; i < pageCount; i++) {
             pages.add(new ClickableGroup());
-            ArrayList<Level> levels = LEVEL_LOADER.getLevels();
+            ArrayList<Level> levels = LEVEL_MANAGER.getLevels();
             int x, y = 1;
-            for (int j = i * 24; j < (i + 1) * 24 && j < LEVEL_LOADER.getNumberOfLevel(); j++) {
+            for (int j = i * 24; j < (i + 1) * 24 && j < LEVEL_MANAGER.getNumberOfLevel(); j++) {
                 if ((j + 1) % 6 == 0) {
                     x = 6;
                 } else {
@@ -136,7 +136,7 @@ public class Game extends Canvas implements Runnable {
                     @Override
                     public void tick() {
                         super.tick();
-                        setClickable(!LEVEL_LOADER.getLevels().get(Integer.parseInt(getString())-1).isLock());
+                        setClickable(!LEVEL_MANAGER.getLevels().get(Integer.parseInt(getString())-1).isLock());
                     }
                 };
                 temp.addAction(new Action(temp) {
@@ -150,7 +150,7 @@ public class Game extends Canvas implements Runnable {
                         MOUSE_HANDLER.removeObject(pages.get(pageNum));
                         MOUSE_HANDLER.addObject(gameSceneClickable);
 
-                        currentLevel = LEVEL_LOADER.getLevels().get(Integer.parseInt(getParent().getString())-1);
+                        currentLevel = LEVEL_MANAGER.getLevels().get(Integer.parseInt(getParent().getString())-1);
                         grid.setUpGrid(currentLevel);
                         LEVEL_HANDLER.setLevel(currentLevel);
                     }
@@ -234,8 +234,10 @@ public class Game extends Canvas implements Runnable {
                 MOUSE_HANDLER.removeObject(gameSceneClickable);
 
                 LEVEL_HANDLER.setLevel(null);
-                if (currentLevel != null)
+                if (currentLevel != null) {
+                    LEVEL_MANAGER.save();
                     currentLevel.reset();
+                }
             }
         });
 
