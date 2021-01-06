@@ -4,11 +4,11 @@ import java.util.Properties;
 
 public class Level implements Comparable<Level> {
     private final int num;
-    private int move;
     private final int moveD;
     private final int target;
-    private int score = 0;
     private final boolean[][] empty = new boolean[9][9];
+    private int move;
+    private int score = 0;
     private boolean lock;
     private boolean win = false;
     private boolean loose = false;
@@ -21,6 +21,21 @@ public class Level implements Comparable<Level> {
         target = Integer.parseInt(properties.getProperty("target"));
 
         setEmpty(properties.getProperty("empty"));
+    }
+
+    public void reset() {
+        move = moveD;
+        score = 0;
+        win = false;
+        loose = false;
+    }
+
+    public int getNumber() {
+        return num;
+    }
+
+    public boolean[][] getEmpty() {
+        return empty;
     }
 
     private void setEmpty(String string) {
@@ -38,21 +53,6 @@ public class Level implements Comparable<Level> {
             int num = Integer.parseInt(str);
             empty[num / 9][num % 9] = true;
         }
-    }
-
-    public void reset() {
-        move = moveD;
-        score = 0;
-        win = false;
-        loose = false;
-    }
-
-    public int getNumber() {
-        return num;
-    }
-
-    public boolean[][] getEmpty() {
-        return empty;
     }
 
     public int getTarget() {
@@ -83,12 +83,12 @@ public class Level implements Comparable<Level> {
         this.lock = lock;
     }
 
-    public void setWin(boolean win) {
-        this.win = win;
-    }
-
     public boolean isWin() {
         return win;
+    }
+
+    public void setWin(boolean win) {
+        this.win = win;
     }
 
     public boolean isLoose() {

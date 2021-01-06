@@ -14,11 +14,9 @@ import java.util.ArrayList;
 public class Grid extends Clickable {
     private Level level = null;
     private BufferedImage gridTexture = null;
-    private LevelHandler handler;
 
-    public Grid(LevelHandler handler) {
+    public Grid() {
         super(350, 30, 900, 900);
-        this.handler = handler;
     }
 
     public void setUpGrid(Level level) {
@@ -141,7 +139,7 @@ public class Grid extends Clickable {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        handler.selected(e.getX(), e.getY());
+        LevelHandler.getInstance().selected(e.getX(), e.getY());
     }
 
     @Override

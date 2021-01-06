@@ -1,7 +1,7 @@
 package com.candycrush.main.object.uicomponent;
 
-import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.handler.SpriteHandler;
+import com.candycrush.main.object.abstraction.Clickable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -9,23 +9,23 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Button extends Clickable {
+    private final ArrayList<BufferedImage> textures;
     private String string = "";
     private Color color;
     private int size;
-    private final ArrayList<BufferedImage> textures;
     private int state = 0;
 
-    public Button(String string, Color color,int size, int x, int y, int width, int height, BufferedImage spriteSheet) {
+    public Button(String string, Color color, int size, int x, int y, int width, int height, BufferedImage spriteSheet) {
         super(x, y, width, height);
         this.string = string;
         this.color = color;
         this.size = size;
-        this.textures = SpriteHandler.divideSprite(spriteSheet,1,3);
+        this.textures = SpriteHandler.divideSprite(spriteSheet, 1, 3);
     }
 
     public Button(int x, int y, int width, int height, BufferedImage spriteSheet) {
         super(x, y, width, height);
-        this.textures = SpriteHandler.divideSprite(spriteSheet,1,3);
+        this.textures = SpriteHandler.divideSprite(spriteSheet, 1, 3);
     }
 
     public String getString() {
@@ -60,13 +60,13 @@ public class Button extends Clickable {
 
     @Override
     public void render(Graphics2D graphic) {
-        graphic.drawImage(textures.get(state),x,y,width,height,null);
+        graphic.drawImage(textures.get(state), x, y, width, height, null);
         graphic.setColor(color);
         Font font = new Font("TimesRoman", Font.BOLD, size);
         FontMetrics fontMetrics = graphic.getFontMetrics(font);
         int strX = x + (width - fontMetrics.stringWidth(string)) / 2;
         int strY = y + (height - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent();
         graphic.setFont(font);
-        graphic.drawString(string,strX,strY);
+        graphic.drawString(string, strX, strY);
     }
 }

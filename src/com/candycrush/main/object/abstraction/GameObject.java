@@ -21,11 +21,6 @@ public abstract class GameObject extends GenericObject {
         return y;
     }
 
-    public void setXY(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
     public int getWidth() {
         return width;
     }

@@ -91,7 +91,7 @@ public class Game extends Canvas implements Runnable {
         Button levelPageRight = new Button((WIDTH / 2) + 70, 800, 100, 100, TEXTURE_LOADER.getTexture("arrow_pink_right.png"));
         PlainImage levelPanel = new PlainImage(TEXTURE_LOADER.getTexture("big_panel.png"), 0, 0, WIDTH, HEIGHT);
 
-        Grid grid = new Grid(LEVEL_HANDLER);
+        Grid grid = new Grid();
 
         backToMenu.addAction(new Action(backToMenu) {
             @Override
@@ -136,7 +136,7 @@ public class Game extends Canvas implements Runnable {
                     @Override
                     public void tick() {
                         super.tick();
-                        setClickable(!LEVEL_MANAGER.getLevels().get(Integer.parseInt(getString())-1).isLock());
+                        setClickable(!LEVEL_MANAGER.getLevels().get(Integer.parseInt(getString()) - 1).isLock());
                     }
                 };
                 temp.addAction(new Action(temp) {
@@ -150,7 +150,7 @@ public class Game extends Canvas implements Runnable {
                         MOUSE_HANDLER.removeObject(pages.get(pageNum));
                         MOUSE_HANDLER.addObject(gameSceneClickable);
 
-                        currentLevel = LEVEL_MANAGER.getLevels().get(Integer.parseInt(getParent().getString())-1);
+                        currentLevel = LEVEL_MANAGER.getLevels().get(Integer.parseInt(getParent().getString()) - 1);
                         grid.setUpGrid(currentLevel);
                         LEVEL_HANDLER.setLevel(currentLevel);
                     }
@@ -207,7 +207,7 @@ public class Game extends Canvas implements Runnable {
             }
         };
 
-        Button backToLevelSelector = new Button(10, HEIGHT-110, 100, 100, TEXTURE_LOADER.getTexture("back_to_menu.png")) {
+        Button backToLevelSelector = new Button(10, HEIGHT - 110, 100, 100, TEXTURE_LOADER.getTexture("back_to_menu.png")) {
             @Override
             public void tick() {
                 super.tick();

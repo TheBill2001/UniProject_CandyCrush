@@ -18,6 +18,16 @@ public class Candy extends GameObject {
         animY = y;
     }
 
+    public static void swap(Candy c1, Candy c2) {
+        int x1 = c1.getX();
+        int y1 = c1.getY();
+        int x2 = c2.getX();
+        int y2 = c2.getY();
+
+        c1.gotoXY(x2, y2);
+        c2.gotoXY(x1, y1);
+    }
+
     public void gotoXY(int x, int y) {
         this.x = x;
         this.y = y;
@@ -29,16 +39,6 @@ public class Candy extends GameObject {
 
     public CandiesID getId() {
         return id;
-    }
-
-    public static void swap(Candy c1, Candy c2) {
-        int x1 = c1.getX();
-        int y1 = c1.getY();
-        int x2 = c2.getX();
-        int y2 = c2.getY();
-
-        c1.gotoXY(x2,y2);
-        c2.gotoXY(x1,y1);
     }
 
     @Override

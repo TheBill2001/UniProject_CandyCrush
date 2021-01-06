@@ -41,7 +41,7 @@ public class LevelManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                levels.add(new Level(properties, Integer.parseInt(file.getName().substring(0,file.getName().indexOf(".")))));
+                levels.add(new Level(properties, Integer.parseInt(file.getName().substring(0, file.getName().indexOf(".")))));
             }
         } else {
             System.out.println("Level folder not found!");
@@ -62,8 +62,8 @@ public class LevelManager {
                 properties = new Properties();
                 try {
                     properties.load(new FileInputStream(file));
-                    String fileName = file.getName().substring(0,file.getName().indexOf("."));
-                    properties.setProperty("lock", "" + levels.get(Integer.parseInt(fileName)-1).isLock());
+                    String fileName = file.getName().substring(0, file.getName().indexOf("."));
+                    properties.setProperty("lock", "" + levels.get(Integer.parseInt(fileName) - 1).isLock());
                     properties.store(new FileOutputStream(file), null);
                 } catch (IOException e) {
                     e.printStackTrace();
