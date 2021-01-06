@@ -53,6 +53,12 @@ public class Button extends Clickable {
     }
 
     @Override
+    public void tick() {
+        if (!clickable)
+            state = 2;
+    }
+
+    @Override
     public void render(Graphics2D graphic) {
         graphic.drawImage(textures.get(state),x,y,width,height,null);
         graphic.setColor(color);

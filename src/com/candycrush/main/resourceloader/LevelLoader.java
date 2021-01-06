@@ -47,6 +47,7 @@ public class LevelLoader {
         }
 
         Collections.sort(levels);
+        levels.get(0).setLock(false);
     }
 
     public ArrayList<Level> getLevels() {

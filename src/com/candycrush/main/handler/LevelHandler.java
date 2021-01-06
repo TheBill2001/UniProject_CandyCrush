@@ -4,6 +4,7 @@ import com.candycrush.main.CandiesID;
 import com.candycrush.main.object.concrete.Candy;
 import com.candycrush.main.object.concrete.Level;
 import com.candycrush.main.object.concrete.ObjectGroup;
+import com.candycrush.main.resourceloader.LevelLoader;
 import com.candycrush.main.resourceloader.TextureLoader;
 
 import java.awt.*;
@@ -179,8 +180,10 @@ public class LevelHandler {
         ArrayList<Candy> matches2 = checkVertical(candy);
         Set<Candy> matches = new HashSet<>();
 
-        if (matches1.size() >= 3 || matches2.size() >= 3) {
+        if (matches1.size() >= 3) {
             matches.addAll(matches1);
+        }
+        if (matches2.size() >= 3) {
             matches.addAll(matches2);
         }
         return matches;
@@ -231,21 +234,23 @@ public class LevelHandler {
         }
 
         // Check after moving two candies.
-        if (oldSelX != selX || oldSelY != selY) {
-            if ((Math.abs(oldSelX - selX) == 100 && Math.abs(oldSelY - selY) == 0) || (Math.abs(oldSelX - selX) == 0 && Math.abs(oldSelY - selY) == 100)) {
-                Candy c1 = findCandy(oldSelX, oldSelY);
-                Candy c2 = findCandy(selX, selY);
+        if (!isMoving()) {
+            if ((oldSelX != selX || oldSelY != selY)) {
+                if ((Math.abs(oldSelX - selX) == 100 && Math.abs(oldSelY - selY) == 0) || (Math.abs(oldSelX - selX) == 0 && Math.abs(oldSelY - selY) == 100)) {
+                    Candy c1 = findCandy(oldSelX, oldSelY);
+                    Candy c2 = findCandy(selX, selY);
 
-                if (c1 != null && c2 != null) {
-                    Candy.swap(c1, c2);
-                    moving.clear();
-                    moving.add(c1);
-                    moving.add(c2);
+                    if (c1 != null && c2 != null) {
+                        Candy.swap(c1, c2);
+                        moving.clear();
+                        moving.add(c1);
+                        moving.add(c2);
+                    }
                 }
-            }
 
-            oldSelX = selX;
-            oldSelY = selY;
+                oldSelX = selX;
+                oldSelY = selY;
+            }
         }
 
         // Check after every candies was moved
@@ -269,6 +274,26 @@ public class LevelHandler {
         }
 
         updateCandiesGroup();
+
+        if (level.getScore() >= level.getTarget()) {
+            while (level.getMove() > 0) {
+                // Add point from the remainder moves
+                level.addScore(100);
+                level.removeMove(1);
+
+                // Unlock next level
+                int temp = LevelLoader.getInstance().getLevels().indexOf(level);
+                if (temp < LevelLoader.getInstance().getNumberOfLevel()-1)
+                    LevelLoader.getInstance().getLevels().get(temp+1).setLock(false);
+
+                level.setWin(true);
+            }
+        }
+
+        if (level.getMove() == 0 && level.getScore() < level.getTarget()) {
+            level.setLoose(true);
+        }
+
     }
 
     public void render(Graphics2D graphic) {
