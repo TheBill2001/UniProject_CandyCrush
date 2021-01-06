@@ -1,7 +1,7 @@
 package com.candycrush.main;
 
 import com.candycrush.main.handler.SpriteHandler;
-import com.candycrush.main.resourceloader.TextureLoader;
+import com.candycrush.main.resourcemanager.TextureManager;
 
 import java.awt.image.BufferedImage;
 
@@ -30,6 +30,6 @@ public enum CandiesID {
     }
 
     private BufferedImage getTexture(CandiesID id) {
-         return SpriteHandler.cutSprite(TextureLoader.getInstance().getTexture(textureName), id.x, id.y, id.width, id.height);
+         return SpriteHandler.cutSprite(TextureManager.getInstance().getTexture(textureName), id.x, id.y, id.width, id.height);
     }
 }

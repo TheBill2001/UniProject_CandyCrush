@@ -4,7 +4,7 @@ import com.candycrush.main.handler.LevelHandler;
 import com.candycrush.main.handler.SpriteHandler;
 import com.candycrush.main.object.abstraction.Clickable;
 import com.candycrush.main.object.concrete.Level;
-import com.candycrush.main.resourceloader.TextureLoader;
+import com.candycrush.main.resourcemanager.TextureManager;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -78,7 +78,7 @@ public class Grid extends Clickable {
 
     private BufferedImage createGridTexture() {
         BufferedImage texture = new BufferedImage(908, 908, BufferedImage.TYPE_4BYTE_ABGR);
-        ArrayList<BufferedImage> textures = SpriteHandler.divideSprite(TextureLoader.getInstance().getTexture("grid.png"), 8, 8, 58);
+        ArrayList<BufferedImage> textures = SpriteHandler.divideSprite(TextureManager.getInstance().getTexture("grid.png"), 8, 8, 58);
         Graphics2D graphic = texture.createGraphics();
         boolean[][] empty = level.getEmpty();
 

@@ -4,8 +4,8 @@ import com.candycrush.main.CandiesID;
 import com.candycrush.main.object.concrete.Candy;
 import com.candycrush.main.object.concrete.Level;
 import com.candycrush.main.object.concrete.ObjectGroup;
-import com.candycrush.main.resourceloader.LevelLoader;
-import com.candycrush.main.resourceloader.TextureLoader;
+import com.candycrush.main.resourcemanager.LevelManager;
+import com.candycrush.main.resourcemanager.TextureManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -282,9 +282,9 @@ public class LevelHandler {
                 level.removeMove(1);
 
                 // Unlock next level
-                int temp = LevelLoader.getInstance().getLevels().indexOf(level);
-                if (temp < LevelLoader.getInstance().getNumberOfLevel()-1)
-                    LevelLoader.getInstance().getLevels().get(temp+1).setLock(false);
+                int temp = LevelManager.getInstance().getLevels().indexOf(level);
+                if (temp < LevelManager.getInstance().getNumberOfLevel()-1)
+                    LevelManager.getInstance().getLevels().get(temp+1).setLock(false);
 
                 level.setWin(true);
             }
@@ -300,7 +300,7 @@ public class LevelHandler {
         if (level == null || selY == 0 || selX == 0)
             return;
 
-        BufferedImage selector = SpriteHandler.cutSprite(TextureLoader.getInstance().getTexture("candies.png"), 274, 1569, 160, 160);
+        BufferedImage selector = SpriteHandler.cutSprite(TextureManager.getInstance().getTexture("candies.png"), 274, 1569, 160, 160);
         graphic.drawImage(selector, selX, selY, 100, 100, null);
     }
 }

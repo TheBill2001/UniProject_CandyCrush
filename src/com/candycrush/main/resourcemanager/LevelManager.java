@@ -1,4 +1,4 @@
-package com.candycrush.main.resourceloader;
+package com.candycrush.main.resourcemanager;
 
 import com.candycrush.main.object.concrete.Level;
 
@@ -9,21 +9,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
 
-public class LevelLoader {
+public class LevelManager {
     private static final ArrayList<Level> levels = new ArrayList<>();
-    private static LevelLoader levelLoader = null;
+    private static LevelManager levelManager = null;
 
-    private LevelLoader() {
+    private LevelManager() {
         System.out.println("Start loading level configs!");
         loadLevelConfig();
         System.out.println("Loaded level configs!");
     }
 
-    public static LevelLoader getInstance() {
-        if (levelLoader == null) {
-            levelLoader = new LevelLoader();
+    public static LevelManager getInstance() {
+        if (levelManager == null) {
+            levelManager = new LevelManager();
         }
-        return levelLoader;
+        return levelManager;
     }
 
     private void loadLevelConfig() {

@@ -1,4 +1,4 @@
-package com.candycrush.main.resourceloader;
+package com.candycrush.main.resourcemanager;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -6,21 +6,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class TextureLoader {
+public class TextureManager {
     private static final HashMap<String, BufferedImage> texture = new HashMap<>();
-    private static TextureLoader textureLoader = null;
+    private static TextureManager textureManager = null;
 
-    private TextureLoader() {
+    private TextureManager() {
         System.out.println("Resource loader started!");
         loadTexture();
         System.out.println("Resource loader ended!");
     }
 
-    public static TextureLoader getInstance() {
-        if (textureLoader == null) {
-            textureLoader = new TextureLoader();
+    public static TextureManager getInstance() {
+        if (textureManager == null) {
+            textureManager = new TextureManager();
         }
-        return textureLoader;
+        return textureManager;
     }
 
     public BufferedImage getTexture(String name) {

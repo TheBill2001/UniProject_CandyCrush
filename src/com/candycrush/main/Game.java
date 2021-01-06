@@ -10,8 +10,8 @@ import com.candycrush.main.object.concrete.ObjectGroup;
 import com.candycrush.main.object.uicomponent.Button;
 import com.candycrush.main.object.uicomponent.Window;
 import com.candycrush.main.object.uicomponent.*;
-import com.candycrush.main.resourceloader.LevelLoader;
-import com.candycrush.main.resourceloader.TextureLoader;
+import com.candycrush.main.resourcemanager.LevelManager;
+import com.candycrush.main.resourcemanager.TextureManager;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -24,9 +24,9 @@ public class Game extends Canvas implements Runnable {
     @Serial
     private static final long serialVersionUID = 8102020L;
     private static final ObjectHandler OBJECT_HANDLER = ObjectHandler.getInstance();
-    private static final TextureLoader TEXTURE_LOADER = TextureLoader.getInstance();
+    private static final TextureManager TEXTURE_LOADER = TextureManager.getInstance();
     private static final MouseHandler MOUSE_HANDLER = MouseHandler.getInstance();
-    private static final LevelLoader LEVEL_LOADER = LevelLoader.getInstance();
+    private static final LevelManager LEVEL_LOADER = LevelManager.getInstance();
     private static final LevelHandler LEVEL_HANDLER = LevelHandler.getInstance();
     private static int fps = 0;
     private static Thread thread;
